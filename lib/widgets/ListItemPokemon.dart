@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex_final_proyect/Entitys/Pokemon.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
+
 
 class ListItemPokemon extends StatefulWidget {
   final Pokemon? pokemon;
@@ -13,6 +16,7 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0)
       ),
@@ -27,12 +31,23 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
           fontWeight: FontWeight.bold
         ),
       ),
-      trailing: Image.network(
-        widget.pokemon?.image ?? "",
-        // width: 200,
-        // height: 200,
-      ),
-      subtitle: Column(
+      // trailing: Image.network(
+      //   widget.pokemon?.image ?? "",
+      //   width: 200,
+      //   height: 600,
+      //   fit: BoxFit.fill,
+      // ),
+        trailing: Expanded(
+          child: AspectRatio(
+            aspectRatio: 16 / 9, // Puedes ajustar la relación de aspecto según tus necesidades
+            child: Image.network(
+              widget.pokemon?.image ?? "",
+              fit: BoxFit.cover, // Ajusta la imagen para llenar el espacio disponible
+            ),
+          ),
+        ),
+
+        subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
