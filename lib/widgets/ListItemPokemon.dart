@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pokedex_final_proyect/Entitys/Pokemon.dart';
 import 'package:pokedex_final_proyect/services/PokemonService.dart';
 
+//BORRA ESTE COMENTARIO
+
 class ListItemPokemon extends StatefulWidget {
 
   final Pokemon? pokemon;
@@ -111,19 +113,19 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
             ),
           ),
           Row(
-          children: widget.pokemon?.types.map((tipo) => Card(
-            color:Color.fromARGB(70, 255, 255, 255),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0)
-            ),
-            child: Text(
-              tipo,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 15.0,
-                ),
+            children: widget.pokemon?.types.map((tipo) => Card(
+              color:Color.fromARGB(70, 255, 255, 255),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0)
               ),
-          )).toList() ?? [],
+              child: Text(
+                tipo,
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 15.0,
+                  ),
+                ),
+            )).toList() ?? [],
           )
         ],
       ),     
