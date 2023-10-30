@@ -3,7 +3,7 @@ import 'package:pokedex_final_proyect/Entitys/CatchRate.dart';
 
 class Training {
   final String evYield;
-  final CatchRate catchRate;
+  final String catchRate;
   final BaseFriendship baseFriendship;
   final int baseExp;
   final String growthRate;

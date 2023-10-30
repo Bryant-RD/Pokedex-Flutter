@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex_final_proyect/Entitys/PokemonPage.dart';
 import 'package:pokedex_final_proyect/pages/PokemoList.dart';
+import 'package:pokedex_final_proyect/search_pokemon_delegate.dart';
 import 'package:pokedex_final_proyect/services/PokemonService.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(MaterialApp(
+    home: const MainApp(),
+  ));
 }
 
 class MainApp extends StatefulWidget {
@@ -35,14 +38,21 @@ class _MainAppState extends State<MainApp> {
       ),
       title: title,
       home: Scaffold(
+        drawer: Drawer(
+          child: Column(
+            children: [
+              Center()
+            ]
+          ),
+        ),
         appBar: AppBar(
           title: const Text("Pokedex"),
           actions: <Widget> [
             IconButton(
-              icon: const Icon(Icons.menu),
-              tooltip: 'Show the menu',
+              icon: const Icon(Icons.search_rounded),
+              tooltip: 'Search a pokemon',
               onPressed: () {
-                print("funciona");
+                showSearch(context: context, delegate: SearchPokemonDelegate());
               },
             )
           ],
@@ -51,7 +61,6 @@ class _MainAppState extends State<MainApp> {
           child: FutureBuilder(
             future: pokemonPage,
             builder: (context, snapshot) {
-              
               return PokemonList(pokemonPage: snapshot.data);
             }
           ),

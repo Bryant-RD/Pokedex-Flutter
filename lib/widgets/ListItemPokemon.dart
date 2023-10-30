@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex_final_proyect/Entitys/Pokemon.dart';
 import 'package:pokedex_final_proyect/services/PokemonService.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 //BORRA ESTE COMENTARIO
 
@@ -76,8 +77,6 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
   @override
   Widget build(BuildContext context) {
 
-    // print("Color que toca: " + widget.color.toString());
-
 
     return Card(
       clipBehavior: Clip.antiAlias,
@@ -85,8 +84,8 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
         borderRadius: BorderRadius.circular(15.0)
       ),
       margin: const EdgeInsets.all(8.0),
-      child: ListTile(
-      tileColor: widget.color,     
+      color: widget.color,
+      child: ListTile(   
       title: Text(
         "${widget.pokemon?.name}",
         style: const TextStyle(
@@ -95,11 +94,10 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
           fontWeight: FontWeight.bold
         ),
       ),
-      trailing: Image.network(
+      trailing:Image.network(
         widget.pokemon?.image ?? "",
-        fit: BoxFit.contain,
-        // width: 200,
-        // height: 200,
+        width:40,
+        height: 40,
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

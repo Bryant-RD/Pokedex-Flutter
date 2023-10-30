@@ -35,10 +35,11 @@ class Pokemon {
   Pokemon.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
-        image = json['sprites']['front_default'],
+        image = json['sprites']['other']['official-artwork']['front_default'],
         height = json['height'],
         weight = json['weight'],
         species = json['species']['name'],
+        baseStats = BaseStats.fromJson(json['stats']),
         types = (json['types'] as List)
             .map((typeEntry) => typeEntry['type']['name'].toString())
             .toList();

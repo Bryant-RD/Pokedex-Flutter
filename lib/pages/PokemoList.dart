@@ -16,13 +16,8 @@ class PokemonList extends StatelessWidget {
     print(pokemonPage?.pokemones?.length);
     final pokemones = pokemonPage?.pokemones;
 
-        return ListView(
-        children: pokemones?.map((e) => ListItemPokemon(pokemon: e,)).toList() ?? [],
-      );
+    return ListView(
+      children: pokemones?.map((e) => ListItemPokemon(pokemon: e,)).toList() ?? [],
+    );
   }
 }
-
-
-
-
-
