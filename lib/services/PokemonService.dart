@@ -37,3 +37,17 @@ Future<Pokemon> getPokemonByUrl(String url) async {
 }
 
 
+Future<List<String>> getPokemonSpeciesByColor(String color) async {
+  final response = await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon-color/$color/'));
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    final species = data['pokemon_species'] as List;
+
+    return species.map((specie) => specie['name'] as String).toList();
+  } else {
+    print('Error al obtener especies de color $color');
+    return [];
+  }
+}
+
