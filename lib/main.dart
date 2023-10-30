@@ -38,10 +38,19 @@ class _MainAppState extends State<MainApp> {
       ),
       title: title,
       home: Scaffold(
-        drawer: Drawer(
+        drawer: const Drawer(
           child: Column(
             children: [
-              Center()
+              Row(
+                children: [
+                  Text("Filtrado por especies"),
+                  Icon(Icons.filter_rounded)
+                ],
+              ),
+              Text("Filtrado por generacion"),
+              Text("filtrado por ejemplo"),
+              Text("favito")
+
             ]
           ),
         ),
