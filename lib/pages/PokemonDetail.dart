@@ -8,7 +8,9 @@ class PokemonDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
+    return Theme(
+      data: ThemeData(useMaterial3: true),
+      child: DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: PreferredSize(
@@ -59,6 +61,7 @@ class PokemonDetail extends StatelessWidget {
           ],
         ),
       ),
+    )
     );
   }
 }

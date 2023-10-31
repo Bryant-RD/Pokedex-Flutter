@@ -24,7 +24,7 @@ class _MainAppState extends State<MainApp> {
   @override
   void initState() {
     super.initState();
-    pokemonPage = getPokemonsPage();
+    pokemonPage = getPokemonsPage(null);
   }
 
 
@@ -35,6 +35,7 @@ class _MainAppState extends State<MainApp> {
     return MaterialApp(
       theme: ThemeData(
         useMaterial3: true,
+        primaryColor: Colors.redAccent.shade700
       ),
       title: title,
       home: Scaffold(

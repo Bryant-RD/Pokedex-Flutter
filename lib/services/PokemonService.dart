@@ -4,9 +4,9 @@ import 'package:http/http.dart' as http;
 import 'package:pokedex_final_proyect/Entitys/Pokemon.dart';
 import 'package:pokedex_final_proyect/Entitys/PokemonPage.dart';
 
-Future<PokemonPage> getPokemonsPage() async {
+Future<PokemonPage> getPokemonsPage(String? url) async {
 
-    final response = await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon'));
+    final response = await http.get(Uri.parse( url ??'https://pokeapi.co/api/v2/pokemon?limit=30'));
     List<Pokemon> tempPokemons = List.empty(growable: true);
     if (response.statusCode == 200) {
        PokemonPage temp =  PokemonPage.fromJson(jsonDecode(response.body) as Map<String, dynamic>);

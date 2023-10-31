@@ -2,7 +2,7 @@ import 'package:pokedex_final_proyect/Entitys/Pokemon.dart';
 
 class PokemonPage {
 
-  final String next;
+  String next;
   final String? previous;
   final List<String> urlPokemones;
   List<Pokemon>? pokemones;
