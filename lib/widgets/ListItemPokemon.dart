@@ -66,7 +66,10 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => PokemonDetail(pokemon: widget.pokemon),
+            builder: (context) => PokemonDetail(
+              pokemon: widget.pokemon,
+              backgroundColor: color,
+            ),
           ),
         );
       },
@@ -115,6 +118,7 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
                       fontSize: 15.0,
                     ),
                   ),
+
                 )).toList() ?? [],
               ),
             ],
