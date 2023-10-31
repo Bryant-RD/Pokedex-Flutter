@@ -50,6 +50,29 @@ Future<Pokemon> getPokemonByNameOrId(String code) async {
 }
 
 
+Future<List<String>> getAllPokemonNames() async {
+  List<String> names = [];
+
+  try {
+    final response = await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon?limit=1000')); // Asegúrate de obtener todos los Pokémon
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      final List<dynamic> results = data['results'];
+
+      for (var result in results) {
+        final name = result['name'];
+        names.add(name);
+      }
+    }
+  } catch (e) {
+    throw Exception(e);
+  }
+
+  return names;
+}
+
+
 Future<List<String>> getPokemonSpeciesByColor(String color) async {
   final response = await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon-color/$color/'));
 

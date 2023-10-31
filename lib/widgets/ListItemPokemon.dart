@@ -1,61 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex_final_proyect/Entitys/Pokemon.dart';
+import 'package:pokedex_final_proyect/pages/PokemonDetail.dart';
 import 'package:pokedex_final_proyect/services/PokemonService.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-
-import '../pages/PokemonDetail.dart';
-
-//BORRA ESTE COMENTARIO
 
 class ListItemPokemon extends StatefulWidget {
-
   final Pokemon? pokemon;
-  final colors = ['red', 'blue', 'green', 'yellow', 'brown', 'purple', 'gray', 'white', 'pink', 'black'];
-  final speciesByColor = Map<String, List<String>>();
-  Color? color;
 
-
-  ListItemPokemon({super.key, required this.pokemon, this.color});
+  ListItemPokemon({super.key, required this.pokemon});
 
   @override
   State<ListItemPokemon> createState() => _ListItemPokemonState();
 }
 
 class _ListItemPokemonState extends State<ListItemPokemon> {
+  Color? color;
+  bool colorLoaded = false;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    fetchDataByColor();
-    checkAndAssignColor();
+    fetchColorForPokemon();
   }
 
-  Future<void> fetchDataByColor() async {
-    print("ENTRANDO A FETCH");
-    for (var color in widget.colors) {
-      final species = await getPokemonSpeciesByColor(color);
-      if (mounted) {
-              setState(() {
-        widget.speciesByColor[color] = species;
-      });
-      }
-    }
-  }
-
-  Future<void> checkAndAssignColor() async {
-    print("checkAndAssignColor");
-    for (var item in widget.colors) {
-        if (widget.speciesByColor[item] != null)  {
-          if (widget.speciesByColor[item]!.contains(widget.pokemon?.species.toLowerCase())) {
-                  // Asigna el color correspondiente al atributo titleColor del Pokémon
-                widget.color = getColorForColorName(item);
-          }
-      }
-    }
-  }
-
-  Color getColorForColorName(String colorName) {
+    Color getColorForColorName(String colorName) {
     print("Asignando color");
     // Define un mapeo de nombres de colores a objetos Color
     Map<String, Color> colorMap = {
@@ -72,9 +39,26 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
     };
 
     // Devuelve el color correspondiente o uno predeterminado si no se encuentra
-    return colorMap[colorName] ?? Colors.grey;
+    return colorMap[colorName] ?? Colors.green.shade600;
   }
 
+  Future<void> fetchColorForPokemon() async {
+    final List<String> colors = ['red', 'blue', 'green', 'yellow', 'brown', 'purple', 'gray', 'white', 'pink', 'black'];
+
+    for (var colorName in colors) {
+      final species = await getPokemonSpeciesByColor(colorName);
+
+      if (species.contains(widget.pokemon?.species.toLowerCase())) {
+        if (mounted) {
+          setState(() {
+          color = getColorForColorName(colorName);
+          colorLoaded = true;
+        });
+        }
+        break; // Una vez que se encuentra el color, no es necesario seguir buscando.
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,57 +70,58 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
           ),
         );
       },
-    child: Card(
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0)
-      ),
-      margin: const EdgeInsets.all(8.0),
-      color: widget.color,
-      child: ListTile(
-      title: Text(
-        "${widget.pokemon?.name}",
-        style: const TextStyle(
-          fontSize: 25.0,
-          color: Colors.white,
-          fontWeight: FontWeight.bold
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
         ),
-      ),
-      trailing:Image.network(
-        widget.pokemon?.image ?? "",
-        width:40,
-        height: 40,
-      ),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "#${widget.pokemon?.id}",
+        margin: const EdgeInsets.all(8.0),
+        color: colorLoaded ? color : Colors.transparent,
+        child: ListTile(
+          title: Text(
+            "${widget.pokemon?.name}",
             style: const TextStyle(
-              color: Color.fromARGB(125, 51, 51, 75),
+              fontSize: 25.0,
+              color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 15.0
             ),
           ),
-          Row(
-            children: widget.pokemon?.types.map((tipo) => Card(
-              color:Color.fromARGB(70, 255, 255, 255),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0)
-              ),
-              child: Text(
-                tipo,
+          trailing: Image.network(
+            widget.pokemon?.image ?? "",
+            width: 40,
+            height: 40,
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "#${widget.pokemon?.id}",
                 style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 15.0,
-                  ),
+                  color: Color.fromARGB(125, 51, 51, 75),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15.0,
                 ),
-            )).toList() ?? [],
-          )
-        ],
+              ),
+              Row(
+                children: widget.pokemon?.types.map((tipo) => Card(
+                  color: Color.fromARGB(70, 255, 255, 255),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: Text(
+                    tipo,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 15.0,
+                    ),
+                  ),
+                )).toList() ?? [],
+              ),
+            ],
+          ),
+        ),
       ),
-    ),
-    ),
     );
   }
 }
+
