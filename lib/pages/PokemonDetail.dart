@@ -16,8 +16,8 @@ class PokemonDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Verificar si el fondo es blanco y ajustar el color del texto en consecuencia
-    final textColor = backgroundColor == Colors.white ? Colors.black : Colors.white;
+    // Verificar si el fondo es blanco o amarillo y ajustar el color del texto en consecuencia
+    final textColor = backgroundColor == Colors.white || backgroundColor == Colors.yellow ? Colors.black : Colors.white;
 
     return DefaultTabController(
       length: 3,
@@ -31,7 +31,9 @@ class PokemonDetail extends StatelessWidget {
               alignment: Alignment.center,
               children: [
                 Image.asset(
-                  'assets/pokeball.png',
+                  backgroundColor == Colors.white || backgroundColor == Colors.yellow
+                      ? 'assets/pokeballblack.png'
+                      : 'assets/pokeball.png',
                   height: 300,
                   width: 400,
                   fit: BoxFit.cover,
@@ -112,8 +114,6 @@ class PokemonDetail extends StatelessWidget {
     );
   }
 }
-
-// Resto del código
 
 
 class PokemonDetailSobre extends StatelessWidget {

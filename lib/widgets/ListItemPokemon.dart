@@ -69,6 +69,14 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
     }
   }
 
+  Color getTextColor() {
+    if (color == Colors.white || color == Colors.yellow) {
+      return Colors.black;
+    } else {
+      return Colors.white;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -96,7 +104,9 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
               Positioned(
                 right: 3,
                 child: Image.asset(
-                  'assets/pokeball.png',
+                  color == Colors.white || color == Colors.yellow
+                      ? 'assets/pokeballblack.png'
+                      : 'assets/pokeball.png',
                   height: 125,
                   width: 125,
                   fit: BoxFit.cover,
@@ -116,7 +126,7 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
                   "${widget.pokemon?.name}",
                   style: TextStyle(
                     fontSize: 28.0,
-                    color: color == Colors.white ? Colors.black : Colors.white,
+                    color: getTextColor(),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -126,7 +136,7 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
                     Text(
                       "#${widget.pokemon?.id}",
                       style: TextStyle(
-                        color: color == Colors.white ? Colors.black : Color.fromARGB(125, 51, 51, 75),
+                        color: getTextColor(),
                         fontWeight: FontWeight.bold,
                         fontSize: 18.0,
                       ),
@@ -140,7 +150,7 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
                         child: Text(
                           tipo,
                           style: TextStyle(
-                            color: color == Colors.white ? Colors.black : Colors.white,
+                            color: getTextColor(),
                             fontSize: 18.0,
                           ),
                         ),
