@@ -6,6 +6,8 @@ import 'package:pokedex_final_proyect/services/PokemonService.dart';
 class ListItemPokemon extends StatefulWidget {
   final Pokemon? pokemon;
 
+
+
   ListItemPokemon({super.key, required this.pokemon});
 
   @override
@@ -15,6 +17,12 @@ class ListItemPokemon extends StatefulWidget {
 class _ListItemPokemonState extends State<ListItemPokemon> {
   Color? color;
   bool colorLoaded = false;
+
+  final TextStyle _textStyle = const TextStyle(
+    fontFamily: 'Google Sans',
+    fontSize: 15.0,
+    fontWeight: FontWeight.bold,
+  );
 
   @override
   void initState() {
@@ -143,18 +151,18 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
                     ),
                     Row(
                       children: widget.pokemon?.types.map((tipo) => Card(
-                        color: Color.fromARGB(70, 255, 255, 255),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        child: Text(
-                          tipo,
-                          style: TextStyle(
-                            color: getTextColor(),
-                            fontSize: 18.0,
-                          ),
-                        ),
-                      )).toList() ?? [],
+                            color: const Color.fromARGB(70, 255, 255, 255),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25.0),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                tipo,
+                                style: _textStyle.copyWith(color: getTextColor()),
+                              ),
+                            ),
+                          )).toList() ?? [],
                     ),
                   ],
                 ),

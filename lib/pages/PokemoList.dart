@@ -3,8 +3,7 @@ import 'package:pokedex_final_proyect/Entitys/Pokemon.dart';
 import 'package:pokedex_final_proyect/Entitys/PokemonPage.dart';
 import 'package:pokedex_final_proyect/services/PokemonService.dart';
 import 'package:pokedex_final_proyect/widgets/ListItemPokemon.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+
 
 class PokemonList extends StatefulWidget {
 

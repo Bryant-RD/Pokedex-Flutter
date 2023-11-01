@@ -21,8 +21,8 @@ class MenuLateral extends StatelessWidget {
               ),
             ),
           ),
-          itemFiltro(icono: Icons.pets, texto: 'Filtrado por especies'),
-          itemFiltro(icono: Icons.explore, texto: 'Filtrado por generaion'),
+          itemFiltro(icono: Icons.cached_sharp, texto: 'Filtrado por Tipo'),
+          itemFiltro(icono: Icons.punch_clock_rounded, texto: 'Filtrado por generaion'),
           itemFiltro(icono: Icons.star, texto: 'Favoritos'),
         ],
       ),
@@ -41,12 +41,21 @@ class itemFiltro extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(icono), // Agrega un icono a la izquierda
-      title: Text(texto),
+    return InkWell(
       onTap: () {
-        // Agrega tu lógica de filtrado aquí
+        // Navigator.of(context).push(
+        //   MaterialPageRoute(
+        //     builder: (context) => ,
+        //   )
+        // );
       },
+      child: ListTile(
+        leading: Icon(icono), // Agrega un icono a la izquierda
+        title: Text(texto),
+        onTap: () {
+          // Agrega tu lógica de filtrado aquí
+        },
+      ),
     );
   }
 }
