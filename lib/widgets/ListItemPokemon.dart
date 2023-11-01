@@ -22,28 +22,37 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
     fetchColorForPokemon();
   }
 
-    Color getColorForColorName(String colorName) {
+  Color getColorForColorName(String colorName) {
     print("Asignando color");
-    // Define un mapeo de nombres de colores a objetos Color
     Map<String, Color> colorMap = {
       'red': Colors.red,
       'blue': Colors.blue,
       'green': Colors.green,
       'yellow': Colors.yellow,
       'brown': Colors.brown,
-      'purple':Colors.purple,
+      'purple': Colors.purple,
       'gray': Colors.grey,
-      'white':Colors.white,
-      'pink':Colors.pink,
-      'black':Colors.black
+      'white': Colors.white,
+      'pink': Colors.pink,
+      'black': Colors.black
     };
 
-    // Devuelve el color correspondiente o uno predeterminado si no se encuentra
     return colorMap[colorName] ?? Colors.green.shade600;
   }
 
   Future<void> fetchColorForPokemon() async {
-    final List<String> colors = ['red', 'blue', 'green', 'yellow', 'brown', 'purple', 'gray', 'white', 'pink', 'black'];
+    final List<String> colors = [
+      'red',
+      'blue',
+      'green',
+      'yellow',
+      'brown',
+      'purple',
+      'gray',
+      'white',
+      'pink',
+      'black'
+    ];
 
     for (var colorName in colors) {
       final species = await getPokemonSpeciesByColor(colorName);
@@ -51,11 +60,11 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
       if (species.contains(widget.pokemon?.species.toLowerCase())) {
         if (mounted) {
           setState(() {
-          color = getColorForColorName(colorName);
-          colorLoaded = true;
-        });
+            color = getColorForColorName(colorName);
+            colorLoaded = true;
+          });
         }
-        break; // Una vez que se encuentra el color, no es necesario seguir buscando.
+        break;
       }
     }
   }
@@ -76,50 +85,69 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
       child: Card(
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0),
+          borderRadius: BorderRadius.circular(17.0),
         ),
         margin: const EdgeInsets.all(8.0),
         color: colorLoaded ? color : Colors.transparent,
-        child: ListTile(
-          title: Text(
-            "${widget.pokemon?.name}",
-            style: const TextStyle(
-              fontSize: 25.0,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          trailing: Image.network(
-            widget.pokemon?.image ?? "",
-            width: 40,
-            height: 40,
-          ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        child: Container(
+          height: 125.0,
+          child: Stack(
             children: [
-              Text(
-                "#${widget.pokemon?.id}",
-                style: const TextStyle(
-                  color: Color.fromARGB(125, 51, 51, 75),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15.0,
+              Positioned(
+                right: 3,
+                child: Image.asset(
+                  'assets/pokeball.png',
+                  height: 125,
+                  width: 125,
+                  fit: BoxFit.cover,
                 ),
               ),
-              Row(
-                children: widget.pokemon?.types.map((tipo) => Card(
-                  color: Color.fromARGB(70, 255, 255, 255),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
+              Positioned(
+                right: 3,
+                child: Image.network(
+                  widget.pokemon?.image ?? "",
+                  width: 125,
+                  height: 125,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              ListTile(
+                title: Text(
+                  "${widget.pokemon?.name}",
+                  style: const TextStyle(
+                    fontSize: 28.0,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
-                  child: Text(
-                    tipo,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 15.0,
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "#${widget.pokemon?.id}",
+                      style: const TextStyle(
+                        color: Color.fromARGB(125, 51, 51, 75),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18.0,
+                      ),
                     ),
-                  ),
-
-                )).toList() ?? [],
+                    Row(
+                      children: widget.pokemon?.types.map((tipo) => Card(
+                        color: Color.fromARGB(70, 255, 255, 255),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        child: Text(
+                          tipo,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18.0,
+                          ),
+                        ),
+                      )).toList() ?? [],
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -128,4 +156,3 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
     );
   }
 }
-
