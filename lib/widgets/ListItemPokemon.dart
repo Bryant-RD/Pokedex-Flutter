@@ -114,9 +114,9 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
               ListTile(
                 title: Text(
                   "${widget.pokemon?.name}",
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 28.0,
-                    color: Colors.white,
+                    color: color == Colors.white ? Colors.black : Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -125,8 +125,8 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
                   children: [
                     Text(
                       "#${widget.pokemon?.id}",
-                      style: const TextStyle(
-                        color: Color.fromARGB(125, 51, 51, 75),
+                      style: TextStyle(
+                        color: color == Colors.white ? Colors.black : Color.fromARGB(125, 51, 51, 75),
                         fontWeight: FontWeight.bold,
                         fontSize: 18.0,
                       ),
@@ -139,8 +139,8 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
                         ),
                         child: Text(
                           tipo,
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: color == Colors.white ? Colors.black : Colors.white,
                             fontSize: 18.0,
                           ),
                         ),

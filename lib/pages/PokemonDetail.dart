@@ -5,125 +5,121 @@ class PokemonDetail extends StatelessWidget {
   final Pokemon? pokemon;
   final Color? backgroundColor;
 
-  const PokemonDetail({super.key, required this.pokemon, this.backgroundColor});
+  const PokemonDetail({Key? key, required this.pokemon, this.backgroundColor}) : super(key: key);
+
+  // Establecer un TextStyle personalizado
+  final TextStyle _textStyle = const TextStyle(
+    fontFamily: 'Google Sans',
+    fontSize: 22.0,
+    fontWeight: FontWeight.bold,
+  );
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: ThemeData(useMaterial3: true),
-      child: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(300.0),
-            child: AppBar(
-              backgroundColor: backgroundColor,
-              elevation: 0,
-              flexibleSpace: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Image.asset(
-                    'assets/pokeball.png',
-                    height: 300,
-                    width: 400,
-                    fit: BoxFit.cover,
-                  ),
-                  // Imagen del Pokémon
-                  Image.network(
-                    pokemon?.image ?? '',
-                    height: 220,
-                    fit: BoxFit.cover,
-                  ),
-                  Positioned(
-                    top: 140,
-                    left: 20,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            '#${pokemon?.id}',
-                            style: const TextStyle(
-                              fontFamily: 'Google Sans',
-                              fontSize: 22.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+    // Verificar si el fondo es blanco y ajustar el color del texto en consecuencia
+    final textColor = backgroundColor == Colors.white ? Colors.black : Colors.white;
+
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(300.0),
+          child: AppBar(
+            backgroundColor: backgroundColor,
+            elevation: 0,
+            flexibleSpace: Stack(
+              alignment: Alignment.center,
+              children: [
+                Image.asset(
+                  'assets/pokeball.png',
+                  height: 300,
+                  width: 400,
+                  fit: BoxFit.cover,
+                ),
+                Image.network(
+                  pokemon?.image ?? '',
+                  height: 220,
+                  fit: BoxFit.cover,
+                ),
+                Positioned(
+                  top: 140,
+                  left: 20,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          '#${pokemon?.id}',
+                          style: _textStyle.copyWith(color: textColor), // Usar el estilo personalizado
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          '${pokemon?.name}',
+                          style: _textStyle.copyWith(color: textColor), // Usar el estilo personalizado
+                        ),
+                      ),
+                      Row(
+                        children: pokemon?.types.map((tipo) {
+                          return Card(
+                            color: const Color.fromARGB(70, 255, 255, 255),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25.0),
                             ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            '${pokemon?.name}',
-                            style: const TextStyle(
-                              fontFamily: 'Google Sans',
-                              fontSize: 22.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                tipo,
+                                style: _textStyle.copyWith(color: textColor), // Usar el estilo personalizado
+                              ),
                             ),
-                          ),
-                        ),
-                        Row(
-                          children: pokemon?.types.map((tipo) {
-                            return Card(
-                              color: const Color.fromARGB(70, 255, 255, 255),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  tipo,
-                                  style: const TextStyle(
-                                    fontFamily: 'Google Sans',
-                                    fontSize: 18.0,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }).toList() ?? [],
-                        ),
-                      ],
-                    ),
+                          );
+                        }).toList() ?? [],
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              bottom: const TabBar(
-                tabs: [
-                  Tab(
-                    text: "Sobre",
-                  ),
-                  Tab(
-                    text: "Evolucion",
-                  ),
-                  Tab(
-                    text: "Status",
-                  ),
-                ],
-                indicatorSize: TabBarIndicatorSize.tab,
-                labelPadding: EdgeInsets.symmetric(horizontal: 16.0),
-              ),
+                ),
+              ],
+            ),
+            bottom: const TabBar(
+              tabs: [
+                Tab(
+                  text: "Sobre",
+                ),
+                Tab(
+                  text: "Evolucion",
+                ),
+                Tab(
+                  text: "Status",
+                ),
+              ],
+              indicatorColor: Colors.white,
+              labelColor: Colors.white,
+              unselectedLabelColor: Colors.white,
             ),
           ),
-          body: TabBarView(
-            children: [
-              PokemonDetailSobre(pokemon: pokemon), // Contenido de la pestaña "Sobre"
-              const PokemonDetailEvolucao(), // Contenido de la pestaña "Evolução"
-              const PokemonDetailStatus(), // Contenido de la pestaña "Status"
-            ],
-          ),
+        ),
+        body: TabBarView(
+          children: [
+            PokemonDetailSobre(pokemon: pokemon), // Contenido de la pestaña "Sobre"
+            const PokemonDetailEvolucao(), // Contenido de la pestaña "Evolução"
+            const PokemonDetailStatus(), // Contenido de la pestaña "Status"
+          ],
         ),
       ),
     );
   }
 }
 
+// Resto del código
+
+
 class PokemonDetailSobre extends StatelessWidget {
   final Pokemon? pokemon;
 
-  const PokemonDetailSobre({super.key, required this.pokemon});
+  const PokemonDetailSobre({Key? key, required this.pokemon}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +136,7 @@ class PokemonDetailSobre extends StatelessWidget {
 }
 
 class PokemonDetailEvolucao extends StatelessWidget {
-  const PokemonDetailEvolucao({super.key});
+  const PokemonDetailEvolucao({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +148,7 @@ class PokemonDetailEvolucao extends StatelessWidget {
 }
 
 class PokemonDetailStatus extends StatelessWidget {
-  const PokemonDetailStatus({super.key});
+  const PokemonDetailStatus({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
