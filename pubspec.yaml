@@ -22,4 +22,5 @@ flutter:
   assets:
     - assets/pokeball.png
     - assets/pokeballblack.png
+    - assets/pokedex.png
   uses-material-design: true
