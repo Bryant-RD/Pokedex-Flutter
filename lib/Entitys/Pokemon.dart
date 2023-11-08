@@ -13,7 +13,7 @@ class Pokemon {
   SpecieData? specieData; //
   BaseStats? baseStats; //
 
-  final String evYield;
+  // final int evYield;
   final int baseExp;
 
   Pokemon({
@@ -25,7 +25,7 @@ class Pokemon {
     required this.weight,
     required this.species,
     required this.types,
-    required this.evYield,
+    // required this.evYield,
     required this.baseExp,
     this.specieData,
     this.baseStats,
@@ -41,7 +41,7 @@ class Pokemon {
         weight = json['weight'],
         species = json['species']['name'],
         baseStats = BaseStats.fromJson(json['stats']),
-        evYield = json['stats']['effort'],
+        // evYield = json['stats']['effort'],
         baseExp = json['base_experience'],
         types = (json['types'] as List)
             .map((typeEntry) => typeEntry['type']['name'].toString())

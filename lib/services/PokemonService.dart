@@ -7,12 +7,13 @@ import 'package:pokedex_final_proyect/Entitys/SpecieData.dart';
 
 Future<PokemonPage> getPokemonsPage(String? url) async {
 
-    final response = await http.get(Uri.parse( url ??'https://pokeapi.co/api/v2/pokemon?limit=30'));
+    final response = await http.get(Uri.parse( url ?? 'https://pokeapi.co/api/v2/pokemon?limit=30'));
     List<Pokemon> tempPokemons = List.empty(growable: true);
     if (response.statusCode == 200) {
        PokemonPage temp =  PokemonPage.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
       for (var i = 0; i < temp.urlPokemones.length; i++) {
         final Pokemon aux = await getPokemonByUrl(temp.urlPokemones[i]);
+        print(temp.urlPokemones[i]);
         final SpecieData sd = await getSpecieDataBySpecie(aux.species);
         aux.specieData = sd;
         tempPokemons.add(aux);
