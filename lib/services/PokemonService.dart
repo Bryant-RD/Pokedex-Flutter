@@ -54,7 +54,8 @@ Future<Pokemon> getPokemonByNameOrId(String code) async {
 
 Future<SpecieData> getSpecieDataBySpecie(String specie) async {
   try {
-    final response = await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon-specie/${specie}'));
+    // print(specie);
+    final response = await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon-species/${specie}'));
     if (response.statusCode == 200) {
       return SpecieData.fromJson(jsonDecode(response.body));
     } else {

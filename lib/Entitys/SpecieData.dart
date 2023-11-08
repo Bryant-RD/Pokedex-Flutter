@@ -1,10 +1,10 @@
 
 class SpecieData {
    
-  final String catchRate; //Species[capture-rate]
-  final String baseFriendship; //Species[base-happines]
-  final String growthRate; //species [growth-rate][name]
-  final String color; //species[color][name]
+  final int catchRate;
+  final int baseFriendship;
+  final String growthRate; 
+  final String color; 
   final List<String> eggGroups;
   final int gender;
   final int eggCycles;
@@ -23,13 +23,13 @@ class SpecieData {
   factory SpecieData.fromJson(Map<String, dynamic> json) {
     return SpecieData(
       catchRate: json['capture_rate'],
-      baseFriendship: json['base_happines'],
+      baseFriendship: json['base_happiness'],
       growthRate: json['growth_rate']['name'],
       color: json['color']['name'],
       gender: json['gender_rate'],
       eggCycles: json['hatch_counter'],
-      eggGroups: (json['types'] as List)
-            .map((typeEntry) => typeEntry['type']['name'].toString())
+      eggGroups: (json['egg_groups'] as List)
+            .map((typeEntry) => typeEntry['name'].toString())
             .toList()
     );
   }
