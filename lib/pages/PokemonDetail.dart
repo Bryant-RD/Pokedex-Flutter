@@ -103,7 +103,7 @@ class PokemonDetail extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            PokemonDetailSobre(pokemon: pokemon, color: backgroundColor), // Pasar color aquí
+            PokemonDetailSobre(pokemon: pokemon, color: backgroundColor),
             const PokemonDetailEvolucao(),
             const PokemonDetailStatus(),
           ],
@@ -128,14 +128,6 @@ class PokemonDetailSobre extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // const SizedBox(height: 16),
-          // Text(
-          //   'Especie: ${pokemon?.species}', // Muestra la especie del Pokemon
-          //   style: const TextStyle(
-          //     fontSize: 16.0,
-          //     fontWeight: FontWeight.bold,
-          //   ),
-          // ),
           const SizedBox(height: 16),
           _buildStatRow('assets/alturaicon.png', 'Altura', '${(pokemon?.height ?? 0) / 10} m'),
           const SizedBox(height: 16),
@@ -166,8 +158,8 @@ class PokemonDetailSobre extends StatelessWidget {
   Widget _buildStatRow(String icon, String label, String value) {
     return Row(
       children: [
-        Image.asset(icon, width: 42, height: 42), // Icono
-        const SizedBox(width: 8), // Espacio entre el icono y el texto
+        Image.asset(icon, width: 42, height: 42),
+        const SizedBox(width: 8),
         Text(
           '$label: $value',
           style: const TextStyle(
@@ -203,7 +195,6 @@ class PokemonDetailSobre extends StatelessWidget {
     );
   }
 }
-
 
 class PokemonDetailEvolucao extends StatelessWidget {
   const PokemonDetailEvolucao({Key? key}) : super(key: key);
