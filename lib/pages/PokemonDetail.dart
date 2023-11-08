@@ -103,9 +103,9 @@ class PokemonDetail extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            PokemonDetailSobre(pokemon: pokemon), // Contenido de la pestaña "Sobre"
-            const PokemonDetailEvolucao(), // Contenido de la pestaña "Evolução"
-            const PokemonDetailStatus(), // Contenido de la pestaña "Status"
+            PokemonDetailSobre(pokemon: pokemon, color: backgroundColor), // Pasar color aquí
+            const PokemonDetailEvolucao(),
+            const PokemonDetailStatus(),
           ],
         ),
       ),
@@ -113,11 +113,11 @@ class PokemonDetail extends StatelessWidget {
   }
 }
 
-
 class PokemonDetailSobre extends StatelessWidget {
   final Pokemon? pokemon;
+  final Color? color;
 
-  const PokemonDetailSobre({Key? key, required this.pokemon}) : super(key: key);
+  const PokemonDetailSobre({Key? key, required this.pokemon, this.color}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -128,6 +128,7 @@ class PokemonDetailSobre extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(height: 16),
           Text(
             'Altura: ${(pokemon?.height ?? 0) / 10} m',
             style: const TextStyle(
@@ -135,6 +136,7 @@ class PokemonDetailSobre extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
+          SizedBox(height: 16),
           Text(
             'Peso: ${(pokemon?.weight ?? 0) / 10} kg',
             style: const TextStyle(
@@ -142,17 +144,23 @@ class PokemonDetailSobre extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
+          SizedBox(height: 16),
 
           if (baseStats != null)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildStatBar('HP', baseStats.hp),
-                _buildStatBar('Ataque', baseStats.attack),
-                _buildStatBar('Defensa', baseStats.defence),
-                _buildStatBar('Ataque Especial', baseStats.specialAttack),
-                _buildStatBar('Defensa Especial', baseStats.specialDefence),
-                _buildStatBar('Velocidad', baseStats.speed),
+                _buildStatBar('HP', baseStats.hp, 255),
+                SizedBox(height: 16),
+                _buildStatBar('Ataque', baseStats.attack, 255),
+                SizedBox(height: 16),
+                _buildStatBar('Defensa', baseStats.defence, 255),
+                SizedBox(height: 16),
+                _buildStatBar('Ataque Especial', baseStats.specialAttack, 255),
+                SizedBox(height: 16),
+                _buildStatBar('Defensa Especial', baseStats.specialDefence, 255),
+                SizedBox(height: 16),
+                _buildStatBar('Velocidad', baseStats.speed, 255),
               ],
             ),
         ],
@@ -160,12 +168,12 @@ class PokemonDetailSobre extends StatelessWidget {
     );
   }
 
-  Widget _buildStatBar(String label, int value) {
+  Widget _buildStatBar(String label, int value, int maxValue) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '$label: $value',
+          '$label: $value/$maxValue',
           style: const TextStyle(
             fontSize: 16.0,
             fontWeight: FontWeight.bold,
@@ -174,9 +182,9 @@ class PokemonDetailSobre extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(8.0),
           child: LinearProgressIndicator(
-            value: value / 255,
+            value: value / maxValue,
             backgroundColor: Colors.grey,
-            valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+            valueColor: AlwaysStoppedAnimation<Color>(color ?? Colors.blue),
             minHeight: 10.0,
           ),
         ),
@@ -184,9 +192,6 @@ class PokemonDetailSobre extends StatelessWidget {
     );
   }
 }
-
-
-
 
 class PokemonDetailEvolucao extends StatelessWidget {
   const PokemonDetailEvolucao({Key? key}) : super(key: key);
