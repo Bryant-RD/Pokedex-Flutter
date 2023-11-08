@@ -7,7 +7,6 @@ class PokemonDetail extends StatelessWidget {
 
   const PokemonDetail({Key? key, required this.pokemon, this.backgroundColor}) : super(key: key);
 
-  // Establecer un TextStyle personalizado
   final TextStyle _textStyle = const TextStyle(
     fontFamily: 'Google Sans',
     fontSize: 22.0,
@@ -16,7 +15,6 @@ class PokemonDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Verificar si el fondo es blanco o amarillo y ajustar el color del texto en consecuencia
     final textColor = backgroundColor == Colors.white || backgroundColor == Colors.yellow ? Colors.black : Colors.white;
 
     return DefaultTabController(
@@ -53,14 +51,14 @@ class PokemonDetail extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           '#${pokemon?.id}',
-                          style: _textStyle.copyWith(color: textColor), // Usar el estilo personalizado
+                          style: _textStyle.copyWith(color: textColor),
                         ),
                       ),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
                           '${pokemon?.name}',
-                          style: _textStyle.copyWith(color: textColor), // Usar el estilo personalizado
+                          style: _textStyle.copyWith(color: textColor),
                         ),
                       ),
                       Row(
@@ -74,7 +72,7 @@ class PokemonDetail extends StatelessWidget {
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 tipo,
-                                style: _textStyle.copyWith(color: textColor), // Usar el estilo personalizado
+                                style: _textStyle.copyWith(color: textColor),
                               ),
                             ),
                           );
@@ -123,17 +121,72 @@ class PokemonDetailSobre extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final baseStats = pokemon?.baseStats;
+
     return Container(
       padding: const EdgeInsets.all(16.0),
-      child: const Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Agrega más detalles sobre el Pokémon aquí según tus datos
+          Text(
+            'Altura: ${(pokemon?.height ?? 0) / 10} m',
+            style: const TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            'Peso: ${(pokemon?.weight ?? 0) / 10} kg',
+            style: const TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+          if (baseStats != null)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildStatBar('HP', baseStats.hp),
+                _buildStatBar('Ataque', baseStats.attack),
+                _buildStatBar('Defensa', baseStats.defence),
+                _buildStatBar('Ataque Especial', baseStats.specialAttack),
+                _buildStatBar('Defensa Especial', baseStats.specialDefence),
+                _buildStatBar('Velocidad', baseStats.speed),
+              ],
+            ),
         ],
       ),
     );
   }
+
+  Widget _buildStatBar(String label, int value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '$label: $value',
+          style: const TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8.0),
+          child: LinearProgressIndicator(
+            value: value / 255,
+            backgroundColor: Colors.grey,
+            valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+            minHeight: 10.0,
+          ),
+        ),
+      ],
+    );
+  }
 }
+
+
+
 
 class PokemonDetailEvolucao extends StatelessWidget {
   const PokemonDetailEvolucao({Key? key}) : super(key: key);
