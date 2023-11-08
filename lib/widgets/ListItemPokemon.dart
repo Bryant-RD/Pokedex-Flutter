@@ -93,7 +93,7 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
           MaterialPageRoute(
             builder: (context) => PokemonDetail(
               pokemon: widget.pokemon,
-              backgroundColor: color,
+              backgroundColor: getColorForColorName(widget.pokemon!.specieData!.color),
             ),
           ),
         );

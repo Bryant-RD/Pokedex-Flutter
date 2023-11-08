@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:pokedex_final_proyect/Entitys/PokemonPage.dart';
+import 'package:pokedex_final_proyect/pages/PokemoList.dart';
 
 class itemFiltro extends StatelessWidget {
 
   final IconData icono;
   final String texto;
+
 
   const itemFiltro({
     super.key, required this.icono, required this.texto,
@@ -11,11 +14,15 @@ class itemFiltro extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    PokemonPage pokemonPage;
+
+
     return InkWell(
       onTap: () {
         // Navigator.of(context).push(
         //   MaterialPageRoute(
-        //     builder: (context) => ,
+        //     builder: (context) => PokemonList(pokemonPage: pokemonPage),
         //   )
         // );
       },

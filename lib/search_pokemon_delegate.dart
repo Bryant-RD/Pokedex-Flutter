@@ -11,79 +11,73 @@ class SearchPokemonDelegate extends SearchDelegate {
         icon: const Icon(Icons.close),
         onPressed: () {
           query = '';
-        }
-      )
+        },
+      ),
     ];
   }
 
   @override
   Widget? buildLeading(BuildContext context) {
-    // TODO: implement buildLeading
     return IconButton(
       icon: const Icon(Icons.arrow_back_ios),
       onPressed: () {
         close(context, null);
-      }
+      },
     );
   }
 
-@override
-Widget buildResults(BuildContext context) {
-  // Verifica si el query está vacío
-  if (query.trim().isEmpty) {
-    return const Text('Búsqueda vacía');
+  @override
+  Widget buildResults(BuildContext context) {
+    if (query.trim().isEmpty) {
+      return const Text('Búsqueda vacía');
+    }
+
+    return FutureBuilder(
+      future: searchPokemon(query),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(strokeWidth: 2),
+          );
+        } else if (snapshot.hasError) {
+          return const Text('Error al cargar el Pokémon');
+        } else if (snapshot.hasData) {
+          final result = snapshot.data;
+          return ListItemPokemon(pokemon: result);
+        } else {
+          return const Text('No se encontraron resultados');
+        }
+      },
+    );
   }
-
-  return FutureBuilder(
-    future: getAllPokemonNames(), // Obtiene la lista de nombres de Pokémon
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const Center(
-          child: CircularProgressIndicator(strokeWidth: 4),
-        );
-      } else if (snapshot.hasError) {
-        return const Text('Error en la búsqueda');
-      } else if (!snapshot.hasData || (snapshot.data as List<String>).isEmpty) {
-        return const Text('No se encontraron resultados');
-      } else {
-        final allPokemonNames = snapshot.data as List<String>;
-        final filteredNames = allPokemonNames.where((name) {
-          return name.toLowerCase().contains(query.toLowerCase());
-        }).toList();
-
-        return ListView.builder(
-          itemCount: filteredNames.length,
-          itemBuilder: (context, index) {
-            final pokemonName = filteredNames[index];
-            return FutureBuilder(
-              future: getPokemonByNameOrId(pokemonName),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator(strokeWidth: 2);
-                } else if (snapshot.hasError) {
-                  return const Text('Error al cargar el Pokémon');
-                } else if (snapshot.hasData) {
-                  final Pokemon result = snapshot.data as Pokemon;
-                  return ListItemPokemon(pokemon: result);
-                } else {
-                  return const Text('No se encontraron resultados');
-                }
-              },
-            );
-          },
-        );
-      }
-    },
-  );
-}
-
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    // TODO: implement buildSuggestions
-    return Center();
+    return const Text('Sugerencias de búsqueda aquí');
   }
 
+  Future<Pokemon?> searchPokemon(String query) async {
+    if (esNumero(query)) {
+      // Busca por ID
+      return getPokemonByNameOrId(query);
+    } else {
+      // Busca por nombre
+      final allPokemonNames = await getAllPokemonNames();
+      final filteredNames = allPokemonNames.where((name) {
+        return name.toLowerCase().contains(query.toLowerCase());
+      }).toList();
 
-  
+      if (filteredNames.isNotEmpty) {
+        return getPokemonByNameOrId(filteredNames[0]);
+      }
+    }
+
+    return null;
+  }
+
+  bool esNumero(String str) {
+    final pattern = r'^[0-9]+$';
+    final regExp = RegExp(pattern);
+    return regExp.hasMatch(str);
+  }
 }

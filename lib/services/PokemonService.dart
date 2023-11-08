@@ -30,7 +30,12 @@ Future<Pokemon> getPokemonByUrl(String url) async {
   try {
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
-      return Pokemon.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+      Pokemon pokemon =  Pokemon.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+      final SpecieData sd = await getSpecieDataBySpecie(pokemon.species);
+      pokemon.specieData = sd;
+
+      return pokemon;
+
     } else {
       throw Exception('Failed to load pokemons');
     }
@@ -43,7 +48,11 @@ Future<Pokemon> getPokemonByNameOrId(String code) async {
   try {
     final response = await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon/$code'));
     if (response.statusCode == 200) {
-      return Pokemon.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+      Pokemon pokemon =  Pokemon.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+      final SpecieData sd = await getSpecieDataBySpecie(pokemon.species);
+      pokemon.specieData = sd;
+
+      return pokemon;
     } else {
       throw Exception('Failed to load pokemons');
     }
