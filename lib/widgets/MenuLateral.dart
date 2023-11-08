@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pokedex_final_proyect/widgets/ItemFiltro.dart';
 
 class MenuLateral extends StatelessWidget {
   const MenuLateral({Key? key});
@@ -34,9 +35,9 @@ class MenuLateral extends StatelessWidget {
               ],
             ),
           ),
-          itemFiltro(icono: Icons.cached_sharp, texto: 'Filtrado por Tipo'),
-          itemFiltro(icono: Icons.punch_clock_rounded, texto: 'Filtrado por generaion'),
-          itemFiltro(icono: Icons.star, texto: 'Favoritos'),
+          const itemFiltro(icono: Icons.cached_sharp, texto: 'Filtrado por Tipo'),
+          const itemFiltro(icono: Icons.punch_clock_rounded, texto: 'Filtrado por generaion'),
+          const itemFiltro(icono: Icons.star, texto: 'Favoritos'),
 
         ],
       ),
@@ -44,37 +45,3 @@ class MenuLateral extends StatelessWidget {
   }
 }
 
-
-
-
-
-
-class itemFiltro extends StatelessWidget {
-
-  final IconData icono;
-  final String texto;
-
-  const itemFiltro({
-    super.key, required this.icono, required this.texto,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        // Navigator.of(context).push(
-        //   MaterialPageRoute(
-        //     builder: (context) => ,
-        //   )
-        // );
-      },
-      child: ListTile(
-        leading: Icon(icono), // Agrega un icono a la izquierda
-        title: Text(texto),
-        onTap: () {
-          // Agrega tu lógica de filtrado aquí
-        },
-      ),
-    );
-  }
-}

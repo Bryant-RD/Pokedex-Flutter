@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:pokedex_final_proyect/Entitys/Pokemon.dart';
 import 'package:pokedex_final_proyect/Entitys/PokemonPage.dart';
+import 'package:pokedex_final_proyect/Entitys/SpecieData.dart';
 
 Future<PokemonPage> getPokemonsPage(String? url) async {
 
@@ -12,7 +13,8 @@ Future<PokemonPage> getPokemonsPage(String? url) async {
        PokemonPage temp =  PokemonPage.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
       for (var i = 0; i < temp.urlPokemones.length; i++) {
         final Pokemon aux = await getPokemonByUrl(temp.urlPokemones[i]);
-        // print(aux.name);
+        final SpecieData sd = await getSpecieDataBySpecie(aux.species);
+        aux.specieData = sd;
         tempPokemons.add(aux);
       }
       temp.pokemones = tempPokemons;
@@ -46,6 +48,19 @@ Future<Pokemon> getPokemonByNameOrId(String code) async {
     }
   } catch (e) {
     throw Exception(e);
+  }
+}
+
+Future<SpecieData> getSpecieDataBySpecie(String specie) async {
+  try {
+    final response = await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon-specie/${specie}'));
+    if (response.statusCode == 200) {
+      return SpecieData.fromJson(jsonDecode(response.body));
+    } else {
+       throw Exception('Failed to load Species');
+    }
+  } catch (e) {
+     throw Exception(e);
   }
 }
 

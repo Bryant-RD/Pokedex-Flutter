@@ -1,7 +1,5 @@
 import 'package:pokedex_final_proyect/Entitys/BaseStats.dart';
-import 'package:pokedex_final_proyect/Entitys/Breedings.dart';
-import 'package:pokedex_final_proyect/Entitys/Training.dart';
-import 'package:pokedex_final_proyect/Entitys/TypeDefences.dart';
+import 'package:pokedex_final_proyect/Entitys/SpecieData.dart';
 
 class Pokemon {
   final int id;
@@ -12,10 +10,11 @@ class Pokemon {
   final int weight;
   final String species;
   final List<String> types;
-  Training? training;
-  Breedings? breedings;
-  BaseStats? baseStats;
-  TypeDefences? typeDefences;
+  SpecieData? specieData; //
+  BaseStats? baseStats; //
+
+  final String evYield;
+  final int baseExp;
 
   Pokemon({
     required this.id,
@@ -26,11 +25,13 @@ class Pokemon {
     required this.weight,
     required this.species,
     required this.types,
-    this.training,
-    this.breedings,
+    required this.evYield,
+    required this.baseExp,
+    this.specieData,
     this.baseStats,
-    this.typeDefences,
   });
+
+  //pokemon[base-experience]//Pokemon[stats][effort]
 
   Pokemon.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -40,6 +41,8 @@ class Pokemon {
         weight = json['weight'],
         species = json['species']['name'],
         baseStats = BaseStats.fromJson(json['stats']),
+        evYield = json['stats']['effort'],
+        baseExp = json['base_experience'],
         types = (json['types'] as List)
             .map((typeEntry) => typeEntry['type']['name'].toString())
             .toList();
