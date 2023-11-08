@@ -41,18 +41,22 @@ class _MainAppState extends State<MainApp> {
       title: title,
       home: Scaffold(
         drawer: const MenuLateral(),
-        appBar: AppBar(
-          title: const Text("Pokedex"),
-          actions: <Widget> [
-            IconButton(
-              icon: const Icon(Icons.search_rounded),
-              tooltip: 'Search a pokemon',
-              onPressed: () {
-                showSearch(context: context, delegate: SearchPokemonDelegate());
-              },
-            )
-          ],
-        ),
+          appBar: AppBar(
+            title: Image.asset(
+              'assets/pokedex.png',
+              width: 150,
+              height: 150,
+            ),
+            actions: <Widget>[
+              IconButton(
+                icon: const Icon(Icons.search_rounded),
+                tooltip: 'Search a pokemon',
+                onPressed: () {
+                  showSearch(context: context, delegate: SearchPokemonDelegate());
+                },
+              )
+            ],
+          ),
         body: Center(
           child: FutureBuilder(
             future: pokemonPage,

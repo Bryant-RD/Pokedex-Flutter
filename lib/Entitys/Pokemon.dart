@@ -8,13 +8,13 @@ class Pokemon {
   final String name;
   final String image;
   String? description;
-  final int height;
-  final int weight;
-  final String species;
+  final int height;//esta
+  final int weight;//esta
+  final String species;//esta
   final List<String> types;
   Training? training;
   Breedings? breedings;
-  BaseStats? baseStats;
+  BaseStats? baseStats;//esta
   TypeDefences? typeDefences;
 
   Pokemon({
