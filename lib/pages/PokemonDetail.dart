@@ -128,43 +128,54 @@ class PokemonDetailSobre extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 16),
-          Text(
-            'Altura: ${(pokemon?.height ?? 0) / 10} m',
-            style: const TextStyle(
-              fontSize: 16.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 16),
-          Text(
-            'Peso: ${(pokemon?.weight ?? 0) / 10} kg',
-            style: const TextStyle(
-              fontSize: 16.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 16),
-
+          // const SizedBox(height: 16),
+          // Text(
+          //   'Especie: ${pokemon?.species}', // Muestra la especie del Pokemon
+          //   style: const TextStyle(
+          //     fontSize: 16.0,
+          //     fontWeight: FontWeight.bold,
+          //   ),
+          // ),
+          const SizedBox(height: 16),
+          _buildStatRow('assets/alturaicon.png', 'Altura', '${(pokemon?.height ?? 0) / 10} m'),
+          const SizedBox(height: 16),
+          _buildStatRow('assets/pesoicon.png', 'Peso', '${(pokemon?.weight ?? 0) / 10} kg'),
+          const SizedBox(height: 16),
           if (baseStats != null)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildStatBar('HP', baseStats.hp, 255),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 _buildStatBar('Ataque', baseStats.attack, 255),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 _buildStatBar('Defensa', baseStats.defence, 255),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 _buildStatBar('Ataque Especial', baseStats.specialAttack, 255),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 _buildStatBar('Defensa Especial', baseStats.specialDefence, 255),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 _buildStatBar('Velocidad', baseStats.speed, 255),
               ],
             ),
         ],
       ),
+    );
+  }
+
+  Widget _buildStatRow(String icon, String label, String value) {
+    return Row(
+      children: [
+        Image.asset(icon, width: 42, height: 42), // Icono
+        const SizedBox(width: 8), // Espacio entre el icono y el texto
+        Text(
+          '$label: $value',
+          style: const TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
     );
   }
 
@@ -192,6 +203,7 @@ class PokemonDetailSobre extends StatelessWidget {
     );
   }
 }
+
 
 class PokemonDetailEvolucao extends StatelessWidget {
   const PokemonDetailEvolucao({Key? key}) : super(key: key);

@@ -23,4 +23,6 @@ flutter:
     - assets/pokeball.png
     - assets/pokeballblack.png
     - assets/pokedex.png
+    - assets/alturaicon.png
+    - assets/pesoicon.png
   uses-material-design: true
