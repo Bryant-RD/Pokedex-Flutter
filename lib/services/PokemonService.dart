@@ -113,3 +113,50 @@ Future<List<String>> getPokemonSpeciesByColor(String color) async {
   }
 }
 
+Future<List<String>> getPokemonTypes() async {
+    try {
+    final response = await http.get(Uri.parse('https://pokeapi.co/api/v2/type'));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      List<String> pokemonTypes = data['result']['name'] as List<String>;
+      return pokemonTypes;
+    } else {
+       throw Exception('Failed to load Species');
+    }
+  } catch (e) {
+     throw Exception(e);
+  }
+}
+
+Future<List<dynamic>> getPokemonNamesByTypes(String type1, String? type2) async {
+  try {
+    final response = await http.get(Uri.parse('https://pokeapi.co/api/v2/type/$type1'));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      List pokemonList = data['pokemon'] as List;
+
+      // Filtrar Pokémon por tipos
+      final List pokemonNames = pokemonList.map((pokemon) {
+        final pokemonName = pokemon['pokemon']['name'];
+        final types = pokemon['pokemon']['types'] as List;
+
+        // Verificar si el Pokémon tiene ambos tipos buscados
+        final hasType1 = types.any((typeEntry) => typeEntry['type']['name'] == type1);
+        final hasType2 = types.any((typeEntry) => typeEntry['type']['name'] == type2);
+
+        if (hasType1 && hasType2) {
+          return pokemonName;
+        }
+
+        return null; // Devolver null para filtrar después
+      }).where((name) => name != null).toList();
+
+      return pokemonNames;
+    } else {
+      throw Exception('Failed to load Pokémon by types');
+    }
+  } catch (e) {
+    throw Exception(e);
+  }
+}
+

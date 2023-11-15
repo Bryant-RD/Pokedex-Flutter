@@ -25,4 +25,23 @@ flutter:
     - assets/pokedex.png
     - assets/alturaicon.png
     - assets/pesoicon.png
+    - assets/icon_types/normal.png
+    - assets/icon_types/fire.png
+    - assets/icon_types/water.png
+    - assets/icon_types/electric.png
+    - assets/icon_types/grass.png
+    - assets/icon_types/ice.png
+    - assets/icon_types/fighting.png
+    - assets/icon_types/poison.png
+    - assets/icon_types/ground.png
+    - assets/icon_types/flying.png
+    - assets/icon_types/psychic.png
+    - assets/icon_types/bug.png
+    - assets/icon_types/rock.png
+    - assets/icon_types/ghost.png
+    - assets/icon_types/dark.png
+    - assets/icon_types/steel.png
+    - assets/icon_types/fairy.png
+    - assets/icon_types/dragon.png
+    
   uses-material-design: true

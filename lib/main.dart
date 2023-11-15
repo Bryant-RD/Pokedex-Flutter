@@ -34,6 +34,7 @@ class _MainAppState extends State<MainApp> {
     const title = "Pokedex";
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
         primaryColor: Colors.redAccent.shade700
@@ -62,6 +63,11 @@ class _MainAppState extends State<MainApp> {
             future: pokemonPage,
             builder: (context, snapshot) {
               return PokemonList(pokemonPage: snapshot.data);
+              /**
+               * TODO:
+               * hacer el consumer para activar el listener de los filtrados
+               * hacer la funcion de filtrado
+               */
             }
           ),
         )
