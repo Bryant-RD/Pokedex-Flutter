@@ -149,20 +149,23 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
                         fontSize: 18.0,
                       ),
                     ),
-                    Row(
-                      children: widget.pokemon?.types.map((tipo) => Card(
-                            color: const Color.fromARGB(70, 255, 255, 255),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25.0),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                tipo,
-                                style: _textStyle.copyWith(color: getTextColor()),
-                              ),
-                            ),
-                          )).toList() ?? [],
+                    Container(
+                      padding: const EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12.0),
+                        color: Colors.grey.withOpacity(0.5)
+                      ),
+                      child: Wrap(
+                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        spacing: 8.0, // Espacio entre los elementos
+                        runSpacing: 8.0, // Espacio entre las líneas
+
+                        children: widget.pokemon?.types.map((tipo) => Image.asset(
+                                'assets/icon_types/${tipo}.png',
+                                width: 30.0,
+                                height: 30.0,
+                              )).toList() ?? [],
+                      ),
                     ),
                   ],
                 ),
