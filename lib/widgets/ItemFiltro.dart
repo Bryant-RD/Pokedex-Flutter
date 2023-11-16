@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-
+import 'package:pokedex_final_proyect/pages/PokemonListFiltro.dart';
+import 'package:pokedex_final_proyect/services/PokemonProvider.dart';
+import 'package:pokedex_final_proyect/services/PokemonService.dart';
+import 'package:provider/provider.dart';
 
 class ItemFiltro extends StatefulWidget {
   final IconData icono;
@@ -26,108 +29,129 @@ class _ItemFiltroState extends State<ItemFiltro> {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> pokemonTypes = ['normal','fire','water','electric','grass','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dark','steel','fairy','dragon'];
+    final List<String> pokemonTypes = [
+      'normal',
+      'fire',
+      'water',
+      'electric',
+      'grass',
+      'ice',
+      'fighting',
+      'poison',
+      'ground',
+      'flying',
+      'psychic',
+      'bug',
+      'rock',
+      'ghost',
+      'dark',
+      'steel',
+      'fairy',
+      'dragon'
+    ];
 
-    return InkWell(
-      child: ListTile(
-        leading: Icon(widget.icono),
-        title: Text(widget.texto),
-        onTap: () {
-          if (widget.texto == "Filtrado por Tipo") {
-            showModalBottomSheet(
-              context: context,
-              builder: (BuildContext context) {
-                return Container(
-                  constraints: BoxConstraints(
-                    maxHeight: MediaQuery.of(context).size.height * 0.6,
-                  ),
-                  padding: const EdgeInsets.all(16.0),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Selecciona los tipos de pokemones',
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(width: 20.0),
-                            Container(
-                              padding: const EdgeInsets.all(8.0),
-                              decoration: BoxDecoration(
-                                color: Colors.red,
-                                borderRadius: BorderRadius.circular(
-                                    12.0), // Ajusta el radio según tus preferencias
-                              ),
-                              child: const Text(
-                              "aplicar",
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                backgroundColor: Colors.red
-                              ),
-                            ),
-                            )
-                          ],
-                        ),
-                        const SizedBox(height: 16.0),
-                        GridView.builder(
-                          shrinkWrap: true,
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 6,
-                            crossAxisSpacing: 3.0,
-                            mainAxisSpacing: 3.0,
-                          ),
-                          itemCount: 18,
-                          itemBuilder: (BuildContext context, int index) {
-                            final type = pokemonTypes[index];
-                            bool isSelected = selectedTypes.contains(type);
-
-                            return TypeGridItem(
-                              type: type,
-                              isSelected: isSelected,
-                              onSelected: (value) {
-                                setState(() {
-                                  if (value) {
-                                    if (selectedTypes.length < 2) {
-                                      selectedTypes.add(type);
-                                      print(selectedTypes);
-                                    }
-                                  } else {
-                                    selectedTypes.remove(type);
-                                    print(selectedTypes);
-                                  }
-                                });
-                              },
-                            );
-                          },
-                        ),
-                      ],
+    return Consumer<TypeSelected>(builder: (context, filterNotifier, child) {
+      return InkWell(
+        child: ListTile(
+          leading: Icon(widget.icono),
+          title: Text(widget.texto),
+          onTap: () {
+            
+            if (widget.texto == "Filtrado por Tipo") {
+              showModalBottomSheet(
+                context: context,
+                builder: (BuildContext context) {
+                  return Container(
+                    constraints: BoxConstraints(
+                      maxHeight: MediaQuery.of(context).size.height * 0.6,
                     ),
-                  ),
-                );
-              },
-            );
-          }
-        },
-      ),
-    );
+                    padding: const EdgeInsets.all(16.0),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Selecciona los tipos de pokemones',
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(width: 20.0),
+                              ElevatedButton(
+                                onPressed: () async {
+                                  final tipos = Provider.of<TypeSelected>(context, listen: false).selectedTypes;
+                                  final test = await getPokemonNamesByTypes(tipos.first, tipos.last);
+
+
+                                  Navigator.of(Provider.of<TypeSelected>(context, listen: false).ctx).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => PokemonListFiltro(pokemonNames: test),
+                                    ),
+                                  );
+
+                                  print(test.length);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red, // Color de fondo del botón
+                                ),
+                                child: const Text(
+                                  "Aplicar",
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          const SizedBox(height: 16.0),
+                          GridView.builder(
+                            shrinkWrap: true,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 6,
+                              crossAxisSpacing: 3.0,
+                              mainAxisSpacing: 3.0,
+                            ),
+                            itemCount: 18,
+                            itemBuilder: (BuildContext context, int index) {
+                              final type = pokemonTypes[index];
+                              bool isSelected = filterNotifier.selectedTypes.contains(type);
+
+                              return TypeGridItem(
+                                type: type,
+                                isSelected: isSelected,
+                                onSelected: (value) {
+                                  filterNotifier.toggleType(type);
+                                },
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            }
+          },
+        ),
+      );
+    });
   }
 }
-
 
 class TypeGridItem extends StatefulWidget {
   final String type;
   late bool isSelected;
   final Function(bool) onSelected;
 
-   TypeGridItem({
+  TypeGridItem({
     Key? key,
     required this.type,
     required this.isSelected,
@@ -150,7 +174,7 @@ class _TypeGridItemState extends State<TypeGridItem> {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: widget.isSelected ? Colors.grey.withOpacity(0.5) : null,
+          color: sombreado(context, widget.type),
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Image.asset(
@@ -161,4 +185,14 @@ class _TypeGridItemState extends State<TypeGridItem> {
       ),
     );
   }
+}
+
+Color? sombreado (context, type) {
+  final providerSelected = Provider.of<TypeSelected>(context).selectedTypes;
+  if (providerSelected.length == 2 && !providerSelected.contains(type)) {
+    return null;
+  } else if(providerSelected.length <= 2 && providerSelected.contains(type)) {
+    return Colors.grey.withOpacity(0.5);
+  }
+
 }

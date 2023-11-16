@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex_final_proyect/Entitys/Pokemon.dart';
 import 'package:pokedex_final_proyect/Entitys/PokemonPage.dart';
+import 'package:pokedex_final_proyect/services/PokemonProvider.dart';
 import 'package:pokedex_final_proyect/services/PokemonService.dart';
 import 'package:pokedex_final_proyect/widgets/ListItemPokemon.dart';
+import 'package:provider/provider.dart';
 
 
 class PokemonList extends StatefulWidget {
@@ -44,6 +46,8 @@ Future<void> loadMoreData() async {
   @override
   Widget build(BuildContext context) {
     final pokemones = widget.pokemonPage?.pokemones;
+
+    Provider.of<TypeSelected>(context).setCtx(context);
 
     return ListView.builder(
       itemCount: pokemones?.length ?? 0,

@@ -128,30 +128,23 @@ Future<List<String>> getPokemonTypes() async {
   }
 }
 
-Future<List<dynamic>> getPokemonNamesByTypes(String type1, String? type2) async {
+Future<List<String>> getPokemonNamesByTypes(String type1, String? type2) async {
   try {
-    final response = await http.get(Uri.parse('https://pokeapi.co/api/v2/type/$type1'));
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      List pokemonList = data['pokemon'] as List;
+      final response = await http.get(Uri.parse('https://pokeapi.co/api/v2/type/$type1'));
+      final response2 = await http.get(Uri.parse('https://pokeapi.co/api/v2/type/$type2'));
+    if (response.statusCode == 200 && response2.statusCode == 200) {
+      final List<dynamic> pokemones1 = jsonDecode(response.body)['pokemon'] as List<dynamic>;
+      final List<dynamic> pokemones2 = jsonDecode(response2.body)['pokemon'] as List<dynamic>;
 
-      // Filtrar Pokémon por tipos
-      final List pokemonNames = pokemonList.map((pokemon) {
-        final pokemonName = pokemon['pokemon']['name'];
-        final types = pokemon['pokemon']['types'] as List;
+      final Set<String> uniquePokemonNames = {
+        ...pokemones1.map((pokemon) => pokemon['pokemon']['name'] as String),
+        ...pokemones2.map((pokemon) => pokemon['pokemon']['name'] as String),
+      };
 
-        // Verificar si el Pokémon tiene ambos tipos buscados
-        final hasType1 = types.any((typeEntry) => typeEntry['type']['name'] == type1);
-        final hasType2 = types.any((typeEntry) => typeEntry['type']['name'] == type2);
+      // Limitar a 10 Pokémones
+    final List<String> limitedPokemonNames = uniquePokemonNames.take(10).toList();
 
-        if (hasType1 && hasType2) {
-          return pokemonName;
-        }
-
-        return null; // Devolver null para filtrar después
-      }).where((name) => name != null).toList();
-
-      return pokemonNames;
+    return limitedPokemonNames;
     } else {
       throw Exception('Failed to load Pokémon by types');
     }
