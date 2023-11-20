@@ -35,6 +35,7 @@ class MenuLateral extends StatelessWidget {
               ],
             ),
           ),
+          const ItemFiltro(icono: Icons.home, texto: "Inicio"),
           const ItemFiltro(icono: Icons.cached_sharp, texto: 'Filtrado por Tipo'),
           const ItemFiltro(icono: Icons.punch_clock_rounded, texto: 'Filtrado por generacion'),
           const ItemFiltro(icono: Icons.star, texto: 'Favoritos'),

@@ -57,92 +57,118 @@ class _ItemFiltroState extends State<ItemFiltro> {
           title: Text(widget.texto),
           onTap: () {
             
-            if (widget.texto == "Filtrado por Tipo") {
-              showModalBottomSheet(
-                context: context,
-                builder: (BuildContext context) {
-                  return Container(
-                    constraints: BoxConstraints(
-                      maxHeight: MediaQuery.of(context).size.height * 0.6,
-                    ),
-                    padding: const EdgeInsets.all(16.0),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Selecciona los tipos de pokemones',
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(width: 20.0),
-                              ElevatedButton(
-                                onPressed: () async {
-                                  final tipos = Provider.of<TypeSelected>(context, listen: false).selectedTypes;
-                                  final test = await getPokemonNamesByTypes(tipos.first, tipos.last);
+            switch (widget.texto) {
+              case "Filtrado por Tipo":
+                ModalTypesSelect(context, pokemonTypes, filterNotifier);
+                break;
 
+              case "Filtrado por generacion":
+                ModalTypesSelect(context, pokemonTypes, filterNotifier);
+                break;
 
-                                  Navigator.of(Provider.of<TypeSelected>(context, listen: false).ctx).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => PokemonListFiltro(pokemonNames: test),
-                                    ),
-                                  );
+              case "Inicio":
+                // Navigator.of(context).pop();
+                 Navigator.popUntil(context, (route) => route.isFirst);
+                print("ATRAS");
+                break;
 
-                                  print(test.length);
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.red, // Color de fondo del botón
-                                ),
-                                child: const Text(
-                                  "Aplicar",
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                          const SizedBox(height: 16.0),
-                          GridView.builder(
-                            shrinkWrap: true,
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 6,
-                              crossAxisSpacing: 3.0,
-                              mainAxisSpacing: 3.0,
-                            ),
-                            itemCount: 18,
-                            itemBuilder: (BuildContext context, int index) {
-                              final type = pokemonTypes[index];
-                              bool isSelected = filterNotifier.selectedTypes.contains(type);
+              case "Favoritos":
+                ModalTypesSelect(context, pokemonTypes, filterNotifier);
+                break;
 
-                              return TypeGridItem(
-                                type: type,
-                                isSelected: isSelected,
-                                onSelected: (value) {
-                                  filterNotifier.toggleType(type);
-                                },
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              );
+              default:
             }
           },
         ),
       );
     });
+  }
+
+  Future<dynamic> ModalTypesSelect(BuildContext context,
+      List<String> pokemonTypes, TypeSelected filterNotifier) {
+    return showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.6,
+          ),
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Selecciona los tipos de pokemones',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 20.0),
+                    ElevatedButton(
+                      onPressed: () async {
+                        final tipos =
+                            Provider.of<TypeSelected>(context, listen: false)
+                                .selectedTypes;
+                        final pokemonNamesByTipe = await getPokemonNamesByTypes(
+                            tipos.first, tipos.last);
+
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => PokemonListFiltro(
+                                pokemonNames: pokemonNamesByTipe),
+                          ),
+                        );
+
+                        // print(test.length);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red, // Color de fondo del botón
+                      ),
+                      child: const Text(
+                        "Aplicar",
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 16.0),
+                GridView.builder(
+                  shrinkWrap: true,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 6,
+                    crossAxisSpacing: 3.0,
+                    mainAxisSpacing: 3.0,
+                  ),
+                  itemCount: 18,
+                  itemBuilder: (BuildContext context, int index) {
+                    final type = pokemonTypes[index];
+                    bool isSelected =
+                        filterNotifier.selectedTypes.contains(type);
+
+                    return TypeGridItem(
+                      type: type,
+                      isSelected: isSelected,
+                      onSelected: (value) {
+                        filterNotifier.toggleType(type);
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }
 

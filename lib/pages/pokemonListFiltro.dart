@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex_final_proyect/Entitys/Pokemon.dart';
+import 'package:pokedex_final_proyect/search_pokemon_delegate.dart';
 import 'package:pokedex_final_proyect/services/PokemonService.dart';
 import 'package:pokedex_final_proyect/widgets/ListItemPokemon.dart';
+import 'package:pokedex_final_proyect/widgets/MenuLateral.dart';
 
 class PokemonListFiltro extends StatefulWidget {
   final List<String> pokemonNames;
@@ -25,27 +27,47 @@ class _PokemonListFiltroState extends State<PokemonListFiltro> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: pokemonFutures.length,
-      itemBuilder: (context, index) {
-        return FutureBuilder<Pokemon>(
-          future: pokemonFutures[index],
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator(strokeWidth: 2);
-            } else if (snapshot.hasError) {
-              return const Text('Error al cargar el Pokémon');
-            } else if (snapshot.hasData) {
-              final Pokemon result = snapshot.data as Pokemon;
-              print(result.name);
-              return(Text(result.name));
-              // return ListItemPokemon(pokemon: result);
-            } else {
-              return const Text('No se encontraron resultados');
-            }
-          },
-        );
-      },
+    return Scaffold
+    (
+      drawer: MenuLateral(),
+      appBar: AppBar(
+        title: Image.asset(
+          'assets/pokedex.png',
+          width: 150,
+          height: 150,
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.search_rounded),
+            tooltip: 'Search a pokemon',
+            onPressed: () {
+              showSearch(context: context, delegate: SearchPokemonDelegate());
+            },
+          )
+        ],
+      ),
+      body: ListView.builder(
+        itemCount: pokemonFutures.length,
+        itemBuilder: (context, index) {
+          return FutureBuilder<Pokemon>(
+            future: pokemonFutures[index],
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator(strokeWidth: 2);
+              } else if (snapshot.hasError) {
+                return const Text('Error al cargar el Pokémon');
+              } else if (snapshot.hasData) {
+                final Pokemon result = snapshot.data as Pokemon;
+                print(result.name);
+                // return(Text(result.name));
+                return ListItemPokemon(pokemon: result);
+              } else {
+                return const Text('No se encontraron resultados');
+              }
+            },
+          );
+        },
+      ),
     );
   }
 }
