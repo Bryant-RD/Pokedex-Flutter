@@ -13,9 +13,14 @@ class PokemonDetail extends StatelessWidget {
     fontWeight: FontWeight.bold,
   );
 
+  String capitalize(String text) {
+    return text.isNotEmpty ? text[0].toUpperCase() + text.substring(1) : text;
+  }
+
   @override
   Widget build(BuildContext context) {
     final textColor = backgroundColor == Colors.white || backgroundColor == Colors.yellow ? Colors.black : Colors.white;
+    final tabLabelColor = backgroundColor ?? Colors.blue; // Color del AppBar
 
     return DefaultTabController(
       length: 3,
@@ -33,7 +38,7 @@ class PokemonDetail extends StatelessWidget {
                       ? 'assets/pokeballblack.png'
                       : 'assets/pokeball.png',
                   height: 300,
-                  width: 400,
+                  width: 550,
                   fit: BoxFit.cover,
                 ),
                 Image.network(
@@ -51,62 +56,112 @@ class PokemonDetail extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           '#${pokemon?.id}',
-                          style: _textStyle.copyWith(color: textColor),
+                          style: _textStyle.copyWith(
+                            color: textColor,
+                            fontSize: 28.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          '${pokemon?.name}',
-                          style: _textStyle.copyWith(color: textColor),
+                          capitalize(pokemon?.name ?? ''),
+                          style: _textStyle.copyWith(
+                            color: textColor,
+                            fontSize: 28.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       Row(
-                        children: pokemon?.types.map((tipo) {
-                          return Card(
+                        children: [
+                          Card(
                             color: const Color.fromARGB(70, 255, 255, 255),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(25.0),
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                tipo,
-                                style: _textStyle.copyWith(color: textColor),
+                              child: Wrap(
+                                spacing: 8.0,
+                                runSpacing: 8.0,
+                                children: [
+                                  for (var tipo in pokemon?.types ?? [])
+                                    Image.asset(
+                                      'assets/icon_types/$tipo.png',
+                                      width: 40.0,
+                                      height: 40.0,
+                                    ),
+                                ],
                               ),
                             ),
-                          );
-                        }).toList() ?? [],
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
               ],
             ),
-            bottom: const TabBar(
-              tabs: [
-                Tab(
-                  text: "Sobre",
-                ),
-                Tab(
-                  text: "Evolucion",
-                ),
-                Tab(
-                  text: "Status",
-                ),
-              ],
-              indicatorColor: Colors.white,
-              labelColor: Colors.white,
-              unselectedLabelColor: Colors.white,
-            ),
           ),
         ),
-        body: TabBarView(
-          children: [
-            PokemonDetailSobre(pokemon: pokemon, color: backgroundColor),
-            const PokemonDetailEvolucao(),
-            const PokemonDetailStatus(),
-          ],
+        backgroundColor: backgroundColor,
+        body: Center(
+          child: Container(
+            margin: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  spreadRadius: 5,
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                TabBar(
+                  tabs: const [
+                    Tab(
+                      child: Text(
+                        "Sobre",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Tab(
+                      child: Text(
+                        "Evolucion",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Tab(
+                      child: Text(
+                        "Status",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                  indicatorColor: Colors.white,
+                  labelColor: tabLabelColor,
+                ),
+
+                Expanded(
+                  child: TabBarView(
+                    children: [
+                      PokemonDetailSobre(pokemon: pokemon, color: backgroundColor),
+                      const PokemonDetailEvolucao(),
+                      const PokemonDetailStatus(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -123,50 +178,70 @@ class PokemonDetailSobre extends StatelessWidget {
   Widget build(BuildContext context) {
     final baseStats = pokemon?.baseStats;
 
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 16),
+        _buildStatRow('Altura', '${(pokemon?.height ?? 0) / 10} m'),
+        const SizedBox(height: 16),
+        _buildStatRow('Peso', '${(pokemon?.weight ?? 0) / 10} kg'),
+        const SizedBox(height: 16),
+        if (baseStats != null) ...[
           const SizedBox(height: 16),
-          _buildStatRow('assets/alturaicon.png', 'Altura', '${(pokemon?.height ?? 0) / 10} m'),
+          const Divider(),
           const SizedBox(height: 16),
-          _buildStatRow('assets/pesoicon.png', 'Peso', '${(pokemon?.weight ?? 0) / 10} kg'),
-          const SizedBox(height: 16),
-          if (baseStats != null)
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildStatBar('HP', baseStats.hp, 255),
-                const SizedBox(height: 16),
-                _buildStatBar('Ataque', baseStats.attack, 255),
-                const SizedBox(height: 16),
-                _buildStatBar('Defensa', baseStats.defence, 255),
-                const SizedBox(height: 16),
-                _buildStatBar('Ataque Especial', baseStats.specialAttack, 255),
-                const SizedBox(height: 16),
-                _buildStatBar('Defensa Especial', baseStats.specialDefence, 255),
-                const SizedBox(height: 16),
-                _buildStatBar('Velocidad', baseStats.speed, 255),
-              ],
-            ),
+          _buildStatsSection('Estadísticas', [
+            _buildStatBar('HP', baseStats.hp, 255),
+            _buildStatBar('Ataque', baseStats.attack, 255),
+            _buildStatBar('Defensa', baseStats.defence, 255),
+            _buildStatBar('Ataque Especial', baseStats.specialAttack, 255),
+            _buildStatBar('Defensa Especial', baseStats.specialDefence, 255),
+            _buildStatBar('Velocidad', baseStats.speed, 255),
+          ]),
         ],
-      ),
+      ],
     );
   }
 
-  Widget _buildStatRow(String icon, String label, String value) {
+  Widget _buildStatRow(String label, String value) {
     return Row(
       children: [
-        Image.asset(icon, width: 42, height: 42),
-        const SizedBox(width: 8),
-        Text(
-          '$label: $value',
-          style: const TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.bold,
+        Expanded(
+          child: Text(
+            '$label:',
+            style: const TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
           ),
         ),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.bold,
+            color: color ?? Colors.blue,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStatsSection(String sectionTitle, List<Widget> stats) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          sectionTitle,
+          style: const TextStyle(
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: 8),
+        ...stats,
       ],
     );
   }
@@ -176,10 +251,11 @@ class PokemonDetailSobre extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '$label: $value/$maxValue',
+          '$label:',
           style: const TextStyle(
             fontSize: 16.0,
             fontWeight: FontWeight.bold,
+            color: Colors.black87,
           ),
         ),
         ClipRRect(

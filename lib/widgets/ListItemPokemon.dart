@@ -6,9 +6,7 @@ import 'package:pokedex_final_proyect/services/PokemonService.dart';
 class ListItemPokemon extends StatefulWidget {
   final Pokemon? pokemon;
 
-
-
-  ListItemPokemon({super.key, required this.pokemon});
+  const ListItemPokemon({super.key, required this.pokemon});
 
   @override
   State<ListItemPokemon> createState() => _ListItemPokemonState();
@@ -85,6 +83,10 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
     }
   }
 
+  String capitalize(String text) {
+    return text.isNotEmpty ? text[0].toUpperCase() + text.substring(1) : text;
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -105,12 +107,13 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
         ),
         margin: const EdgeInsets.all(8.0),
         color: colorLoaded ? color : Colors.transparent,
-        child: Container(
-          height: 125.0,
+        child: SizedBox(
+          height: 135.0,
           child: Stack(
             children: [
               Positioned(
-                right: 3,
+                right: 5,
+                top: 5,
                 child: Image.asset(
                   color == Colors.white || color == Colors.yellow
                       ? 'assets/pokeballblack.png'
@@ -121,7 +124,8 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
                 ),
               ),
               Positioned(
-                right: 3,
+                right: 5,
+                top: 5,
                 child: Image.network(
                   widget.pokemon?.image ?? "",
                   width: 125,
@@ -131,7 +135,7 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
               ),
               ListTile(
                 title: Text(
-                  "${widget.pokemon?.name}",
+                  capitalize(widget.pokemon?.name ?? ''),
                   style: TextStyle(
                     fontSize: 28.0,
                     color: getTextColor(),
@@ -146,25 +150,23 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
                       style: TextStyle(
                         color: getTextColor(),
                         fontWeight: FontWeight.bold,
-                        fontSize: 18.0,
+                        fontSize: 22.0,
                       ),
                     ),
                     Container(
                       padding: const EdgeInsets.all(8.0),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12.0),
-                        color: Colors.grey.withOpacity(0.5)
+                        borderRadius: BorderRadius.circular(25.0),
+                        color: Colors.grey.withOpacity(0.5),
                       ),
                       child: Wrap(
-                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         spacing: 8.0, // Espacio entre los elementos
                         runSpacing: 8.0, // Espacio entre las líneas
-
                         children: widget.pokemon?.types.map((tipo) => Image.asset(
-                                'assets/icon_types/${tipo}.png',
-                                width: 30.0,
-                                height: 30.0,
-                              )).toList() ?? [],
+                          'assets/icon_types/${tipo}.png',
+                          width: 30.0,
+                          height: 30.0,
+                        )).toList() ?? [],
                       ),
                     ),
                   ],
