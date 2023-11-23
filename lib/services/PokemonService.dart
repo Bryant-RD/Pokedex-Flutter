@@ -54,7 +54,7 @@ Future<Pokemon> getPokemonByNameOrId(String code) async {
 
       return pokemon;
     } else {
-      throw Exception('Failed to load pokemons');
+      throw Exception('Failed to load pokemon $code');
     }
   } catch (e) {
     throw Exception(e);
@@ -118,7 +118,9 @@ Future<List<String>> getPokemonTypes() async {
     final response = await http.get(Uri.parse('https://pokeapi.co/api/v2/type'));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      List<String> pokemonTypes = data['result']['name'] as List<String>;
+            List<String> pokemonTypes = (data['results'] as List)
+          .map((result) => result['name'] as String)
+          .toList();
       return pokemonTypes;
     } else {
        throw Exception('Failed to load Species');
@@ -148,6 +150,42 @@ Future<List<String>> getPokemonNamesByTypes(String type1, String? type2) async {
     } else {
       throw Exception('Failed to load Pokémon by types');
     }
+  } catch (e) {
+    throw Exception(e);
+  }
+}
+
+Future<List<String>> getPokemonGenerations() async {
+
+  try {
+    final response = await http.get(Uri.parse('https://pokeapi.co/api/v2/generation/'));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      List<String> pokemonGenerations = (data['results'] as List)
+          .map((result) => result['name'] as String)
+          .toList();
+      return pokemonGenerations;
+      } else {
+        throw Exception('Failed to load Species');
+      }
+  } catch (e) {
+    throw Exception(e);
+  }
+  
+}
+
+Future <List<String>> getPokemonsNameByGeneration(String generacion) async {
+    try {
+    final response = await http.get(Uri.parse('https://pokeapi.co/api/v2/generation/$generacion'));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      List<String> pokemonGenerations = (data['pokemon_species'] as List)
+          .map((result) => result['name'] as String)
+          .toList();
+      return pokemonGenerations;
+      } else {
+        throw Exception('Failed to load Species');
+      }
   } catch (e) {
     throw Exception(e);
   }

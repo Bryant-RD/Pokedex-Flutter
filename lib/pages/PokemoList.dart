@@ -47,8 +47,6 @@ Future<void> loadMoreData() async {
   Widget build(BuildContext context) {
     final pokemones = widget.pokemonPage?.pokemones;
 
-    Provider.of<TypeSelected>(context).setCtx(context);
-
     return ListView.builder(
       itemCount: pokemones?.length ?? 0,
       itemBuilder: (context, index) {

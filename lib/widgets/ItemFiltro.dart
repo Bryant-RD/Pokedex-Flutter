@@ -20,6 +20,7 @@ class ItemFiltro extends StatefulWidget {
 
 class _ItemFiltroState extends State<ItemFiltro> {
   late Set<String> selectedTypes;
+  // late List<String> tipos = getPokemonTypes() as List<String>;
 
   @override
   void initState() {
@@ -29,63 +30,102 @@ class _ItemFiltroState extends State<ItemFiltro> {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> pokemonTypes = [
-      'normal',
-      'fire',
-      'water',
-      'electric',
-      'grass',
-      'ice',
-      'fighting',
-      'poison',
-      'ground',
-      'flying',
-      'psychic',
-      'bug',
-      'rock',
-      'ghost',
-      'dark',
-      'steel',
-      'fairy',
-      'dragon'
-    ];
+    // final List<String> pokemonTypes = ['normal','fire','water','electric','grass','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dark','steel','fairy','dragon'];
 
     return Consumer<TypeSelected>(builder: (context, filterNotifier, child) {
       return InkWell(
         child: ListTile(
           leading: Icon(widget.icono),
           title: Text(widget.texto),
-          onTap: () {
-            
+          onTap: () async {
             switch (widget.texto) {
               case "Filtrado por Tipo":
+              final pokemonTypes = await getPokemonTypes();
                 ModalTypesSelect(context, pokemonTypes, filterNotifier);
                 break;
 
               case "Filtrado por generacion":
-                ModalTypesSelect(context, pokemonTypes, filterNotifier);
+
+                final generaciones = await getPokemonGenerations();
+
+                // ignore: use_build_context_synchronously
+                ModalGenerationSelect(context, generaciones);
                 break;
 
               case "Inicio":
-                // Navigator.of(context).pop();
-                 Navigator.popUntil(context, (route) => route.isFirst);
+                // Volvemos a la pantalla principal (la primera en la pila de navegación)
+                Navigator.popUntil(context, (route) => route.isFirst);
                 print("ATRAS");
                 break;
 
               case "Favoritos":
-                ModalTypesSelect(context, pokemonTypes, filterNotifier);
+                // ModalTypesSelect(context, pokemonTypes, filterNotifier);
                 break;
 
               default:
+                // Manejar caso no definido, si es necesario.
             }
           },
+
         ),
       );
     });
   }
 
+  Future<dynamic> ModalGenerationSelect(BuildContext context, List<String> generaciones) {
+    return showModalBottomSheet(
+                context: context,
+                builder: (BuildContext context) {
+                  return Container(
+                    constraints: BoxConstraints(
+                      maxHeight: MediaQuery.of(context).size.height * 0.6,
+                    ),
+                    padding: const EdgeInsets.all(16.0),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Selecciona la generación',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 16.0),
+                          // Utiliza ListView.builder para mostrar la lista de generaciones
+                          ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: generaciones.length,
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                onTap: () async {
+                                  final pokemones = await getPokemonsNameByGeneration(generaciones[index]);
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(builder: (context) => PokemonListFiltro(pokemonNames: pokemones))
+                                  );
+                                },
+                                child: Text(
+                                  generaciones[index],
+                                  style: const TextStyle(
+                                    fontSize: 16.0
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+  }
+
   Future<dynamic> ModalTypesSelect(BuildContext context,
       List<String> pokemonTypes, TypeSelected filterNotifier) {
+
+        // List<String> hola = await getPokemonTypes();
     return showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -111,11 +151,8 @@ class _ItemFiltroState extends State<ItemFiltro> {
                     const SizedBox(width: 20.0),
                     ElevatedButton(
                       onPressed: () async {
-                        final tipos =
-                            Provider.of<TypeSelected>(context, listen: false)
-                                .selectedTypes;
-                        final pokemonNamesByTipe = await getPokemonNamesByTypes(
-                            tipos.first, tipos.last);
+                        final tipos = Provider.of<TypeSelected>(context, listen: false).selectedTypes;
+                        final pokemonNamesByTipe = await getPokemonNamesByTypes(tipos.first, tipos.last);
 
                         Navigator.of(context).push(
                           MaterialPageRoute(

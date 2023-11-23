@@ -46,4 +46,16 @@ class Pokemon {
         types = (json['types'] as List)
             .map((typeEntry) => typeEntry['type']['name'].toString())
             .toList();
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'image': image,
+      'height': height,
+      'weight': weight,
+      'species': species,
+      'types': types
+    };
+  }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class TypeSelected with ChangeNotifier {
   
   Set<String> _selectedTypes = {};
+  String _generacion = "";
 
   Set<String> get selectedTypes => _selectedTypes;
 
@@ -16,11 +17,11 @@ class TypeSelected with ChangeNotifier {
     notifyListeners();
   }
 
-  late BuildContext _context;
-  BuildContext get ctx => _context;
+  String get generacionSelected => _generacion;
 
-  void setCtx(BuildContext context) {
-    _context = context;
+  void setGeneracion (String select) {
+    _generacion = select;
+    notifyListeners();
   }
 
   

@@ -91,6 +91,7 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        print(widget.pokemon!.toMap());
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => PokemonDetail(
