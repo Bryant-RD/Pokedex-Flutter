@@ -29,6 +29,7 @@ flutter:
     - assets/pokedex.png
     - assets/alturaicon.png
     - assets/pesoicon.png
+    - assets/pokeball2.png
     - assets/icon_types/normal.png
     - assets/icon_types/fire.png
     - assets/icon_types/water.png

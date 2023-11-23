@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pokedex_final_proyect/Entitys/Pokemon.dart';
 import 'package:pokedex_final_proyect/pages/PokemonDetail.dart';
@@ -15,6 +16,7 @@ class ListItemPokemon extends StatefulWidget {
 class _ListItemPokemonState extends State<ListItemPokemon> {
   Color? color;
   bool colorLoaded = false;
+  bool isFavorite = false;
 
   final TextStyle _textStyle = const TextStyle(
     fontFamily: 'Google Sans',
@@ -29,7 +31,9 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
   }
 
   Color getColorForColorName(String colorName) {
-    print("Asignando color");
+    if (kDebugMode) {
+      print("Asignando color");
+    }
     Map<String, Color> colorMap = {
       'red': Colors.red,
       'blue': Colors.blue,
@@ -91,7 +95,6 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        print(widget.pokemon!.toMap());
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => PokemonDetail(
@@ -109,24 +112,24 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
         margin: const EdgeInsets.all(8.0),
         color: colorLoaded ? color : Colors.transparent,
         child: SizedBox(
-          height: 135.0,
+          height: 145.0,
           child: Stack(
             children: [
               Positioned(
-                right: 5,
+                right: 36,
                 top: 5,
                 child: Image.asset(
                   color == Colors.white || color == Colors.yellow
-                      ? 'assets/pokeballblack.png'
+                      ? 'assets/pokeballBlack.png'
                       : 'assets/pokeball.png',
-                  height: 125,
-                  width: 125,
+                  height: 135,
+                  width: 135,
                   fit: BoxFit.cover,
                 ),
               ),
               Positioned(
-                right: 5,
-                top: 5,
+                right: 40,
+                top: 10,
                 child: Image.network(
                   widget.pokemon?.image ?? "",
                   width: 125,
@@ -161,16 +164,34 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
                         color: Colors.grey.withOpacity(0.5),
                       ),
                       child: Wrap(
-                        spacing: 8.0, // Espacio entre los elementos
-                        runSpacing: 8.0, // Espacio entre las líneas
+                        spacing: 8.0,
+                        runSpacing: 8.0,
                         children: widget.pokemon?.types.map((tipo) => Image.asset(
-                          'assets/icon_types/${tipo}.png',
+                          'assets/icon_types/$tipo.png',
                           width: 30.0,
                           height: 30.0,
                         )).toList() ?? [],
                       ),
                     ),
                   ],
+                ),
+              ),
+              Positioned(
+                top: 7,
+                right: 7,
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isFavorite = !isFavorite;
+                    });
+                    // pon la lógica de la base de datos aqui :)
+                    // la variable "isFavorite" es para saber si algun pokemon es favorito
+                  },
+                  child: Icon(
+                    isFavorite ? Icons.star : Icons.star_border,
+                    color: isFavorite || color == Colors.yellow ? Colors.orange : null,
+                    size: 39.0,
+                  ),
                 ),
               ),
             ],
