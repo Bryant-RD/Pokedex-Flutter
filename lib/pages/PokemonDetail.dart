@@ -4,8 +4,9 @@ import 'package:pokedex_final_proyect/Entitys/Pokemon.dart';
 class PokemonDetail extends StatelessWidget {
   final Pokemon? pokemon;
   final Color? backgroundColor;
+  final bool isFavorite;
 
-  const PokemonDetail({Key? key, required this.pokemon, this.backgroundColor}) : super(key: key);
+  const PokemonDetail({Key? key, required this.pokemon, this.backgroundColor, this.isFavorite = false}) : super(key: key);
 
   final TextStyle _textStyle = const TextStyle(
     fontFamily: 'Google Sans',
@@ -102,6 +103,12 @@ class PokemonDetail extends StatelessWidget {
                     ],
                   ),
                 ),
+                // Mover la estrella a la esquina superior derecha
+                Positioned(
+                  top: 10,
+                  right: 10,
+                  child: _buildFavoriteButton(),
+                ),
               ],
             ),
           ),
@@ -149,7 +156,6 @@ class PokemonDetail extends StatelessWidget {
                   indicatorColor: Colors.white,
                   labelColor: tabLabelColor,
                 ),
-
                 Expanded(
                   child: TabBarView(
                     children: [
@@ -164,6 +170,19 @@ class PokemonDetail extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildFavoriteButton() {
+    return IconButton(
+      icon: Icon(
+        isFavorite ? Icons.star : Icons.star_border,
+        color: Colors.yellow,
+      ),
+      onPressed: () {
+        // Lógica para cambiar el estado de favorito
+        // Puedes implementar esto de acuerdo a tu lógica de manejo de favoritos
+      },
     );
   }
 }

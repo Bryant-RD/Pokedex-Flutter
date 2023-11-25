@@ -189,7 +189,7 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
                   },
                   child: Icon(
                     isFavorite ? Icons.star : Icons.star_border,
-                    color: isFavorite || color == Colors.yellow ? Colors.orange : null,
+                    color: isFavorite || color == Colors.yellow ? Colors.orange : Colors.orange,
                     size: 39.0,
                   ),
                 ),
