@@ -56,7 +56,7 @@ class _PokemonListFiltroState extends State<PokemonListFiltro> {
                 return const CircularProgressIndicator(strokeWidth: 2);
               } else if (snapshot.hasError) {
                 return const Text('Error al cargar el Pokémon');
-              } else if (snapshot.hasData) {
+              } else if (snapshot.hasData && snapshot.data?.id != -1) {
                 final Pokemon result = snapshot.data as Pokemon;
                 print(result.name);
                 // return(Text(result.name));

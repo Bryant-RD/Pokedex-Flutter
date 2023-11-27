@@ -45,6 +45,7 @@ Future<Pokemon> getPokemonByUrl(String url) async {
 }
 
 Future<Pokemon> getPokemonByNameOrId(String code) async {
+  Pokemon noEncontrado = Pokemon(id: -1, name: "null", image: "null", height: 0, weight: 0, species: "null", types: [], baseExp: 0);
   try {
     final response = await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon/$code'));
     if (response.statusCode == 200) {
@@ -57,7 +58,12 @@ Future<Pokemon> getPokemonByNameOrId(String code) async {
       throw Exception('Failed to load pokemon $code');
     }
   } catch (e) {
-    throw Exception(e);
+    // throw Exception(e);
+    return Future(() => noEncontrado);
+    /**
+     * Hacer un pokemon por defecto y revisar en la iteracion si es para no
+     * mostrarlo
+     */
   }
 }
 
