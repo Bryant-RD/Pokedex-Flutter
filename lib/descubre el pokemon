@@ -1,0 +1,9 @@
+    child: ColorFiltered(
+                  colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
+                  child:  Image.network(
+                    widget.pokemon?.image ?? "",
+                    width: 125,
+                    height: 125,
+                    fit: BoxFit.cover,
+                  ),
+                )
