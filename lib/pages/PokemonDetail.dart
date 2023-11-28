@@ -18,6 +18,8 @@ class PokemonDetail extends StatelessWidget {
     fontWeight: FontWeight.bold,
   );
 
+  get color => null;
+
   String capitalize(String text) {
     return text.isNotEmpty ? text[0].toUpperCase() + text.substring(1) : text;
   }
@@ -181,7 +183,8 @@ class PokemonDetail extends StatelessWidget {
     return IconButton(
       icon: Icon(
         isFavorite ? Icons.star : Icons.star_border,
-        color: Colors.yellow,
+        color: isFavorite || color == Colors.yellow ? Colors.orange : Colors.orange,
+        size: 49.0,
       ),
       onPressed: () {
         // Lógica para cambiar el estado de favorito

@@ -132,14 +132,17 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
               Positioned(
                 right: 36,
                 top: 5,
-                child: Image.asset(
-                  color == Colors.white || color == Colors.yellow
-                      ? 'assets/pokeballBlack.png'
-                      : 'assets/pokeball.png',
-                  height: 135,
-                  width: 135,
-                  fit: BoxFit.cover,
-                ),
+                child: Opacity(
+                  opacity: 0.8,
+                  child:  Image.asset(
+                    color == Colors.white || color == Colors.yellow
+                        ? 'assets/pokeballBlack.png'
+                        : 'assets/pokeball.png',
+                    height: 135,
+                    width: 135,
+                    fit: BoxFit.cover,
+                  ),
+                )
               ),
               Positioned(
                 right: 40,
