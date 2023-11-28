@@ -8,6 +8,7 @@ class SpecieData {
   final List<String> eggGroups;
   final int gender;
   final int eggCycles;
+  final String evolucionUrl;
 
   SpecieData({
     required this.catchRate,
@@ -16,7 +17,8 @@ class SpecieData {
     required this.color,
     required this.eggGroups,
     required this.gender,
-    required this.eggCycles
+    required this.eggCycles,
+    required this.evolucionUrl
   });
 
 
@@ -28,6 +30,7 @@ class SpecieData {
       color: json['color']['name'],
       gender: json['gender_rate'],
       eggCycles: json['hatch_counter'],
+      evolucionUrl: json['evolution_chain']['url'],
       eggGroups: (json['egg_groups'] as List)
             .map((typeEntry) => typeEntry['name'].toString())
             .toList()

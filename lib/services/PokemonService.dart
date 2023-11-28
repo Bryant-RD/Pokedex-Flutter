@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:pokedex_final_proyect/Entitys/Evoluciones.dart';
+import 'package:pokedex_final_proyect/Entitys/Hability.dart';
 import 'package:pokedex_final_proyect/Entitys/Pokemon.dart';
 import 'package:pokedex_final_proyect/Entitys/PokemonPage.dart';
 import 'package:pokedex_final_proyect/Entitys/SpecieData.dart';
@@ -45,7 +47,7 @@ Future<Pokemon> getPokemonByUrl(String url) async {
 }
 
 Future<Pokemon> getPokemonByNameOrId(String code) async {
-  Pokemon noEncontrado = Pokemon(id: -1, name: "null", image: "null", height: 0, weight: 0, species: "null", types: [], baseExp: 0);
+  Pokemon noEncontrado = Pokemon(id: -1, name: "null", image: "null", height: 0, weight: 0, species: "null", types: [], baseExp: 0, habilities: [], moves: []);// 
   try {
     final response = await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon/$code'));
     if (response.statusCode == 200) {
@@ -197,3 +199,32 @@ Future <List<String>> getPokemonsNameByGeneration(String generacion) async {
   }
 }
 
+Future<Hability> getPokemonHabilityByName(String name) async {
+  try {
+    final response = await http.get(Uri.parse('https://pokeapi.co/api/v2/ability/$name/'));
+    if (response.statusCode == 200) {
+        // print(response.body);
+        Hability hab = Hability.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+         return hab;
+      } else {
+        throw Exception('Failed to load Species');
+      }
+  } catch (e) {
+    throw Exception(e);
+  }
+}
+
+
+Future<EvolutionChain> getPokemonEvolutions(String url) async {
+  try {
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      return EvolutionChain.fromJson(data);
+    } else {
+      throw Exception('Failed to load Pokemon evolutions');
+    }
+  } catch (e) {
+    throw Exception(e);
+  }
+}

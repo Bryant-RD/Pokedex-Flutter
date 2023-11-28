@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:pokedex_final_proyect/Entitys/Evoluciones.dart';
+import 'package:pokedex_final_proyect/Entitys/Hability.dart';
 import 'package:pokedex_final_proyect/Entitys/Pokemon.dart';
 import 'package:pokedex_final_proyect/pages/PokemonDetail.dart';
 import 'package:pokedex_final_proyect/services/PokemonService.dart';
@@ -94,12 +96,24 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
+      onTap: () async {
+
+        List<Hability> habilidades = [
+          await getPokemonHabilityByName(widget.pokemon!.habilities[0]),
+          await getPokemonHabilityByName(widget.pokemon!.habilities[1])
+          ];
+
+        EvolutionChain ec = await getPokemonEvolutions(widget.pokemon!.specieData!.evolucionUrl);
+
+          print(ec.chain.speciesName);
+
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => PokemonDetail(
               pokemon: widget.pokemon,
               backgroundColor: getColorForColorName(widget.pokemon!.specieData!.color),
+              pokemonSkills: habilidades,
+              pokemonEvolution: ec
             ),
           ),
         );

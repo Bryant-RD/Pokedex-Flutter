@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pokedex_final_proyect/Entitys/Evoluciones.dart';
+import 'package:pokedex_final_proyect/Entitys/Hability.dart';
 import 'package:pokedex_final_proyect/Entitys/Pokemon.dart';
 
 class PokemonDetail extends StatelessWidget {
@@ -6,7 +8,9 @@ class PokemonDetail extends StatelessWidget {
   final Color? backgroundColor;
   final bool isFavorite;
 
-  const PokemonDetail({Key? key, required this.pokemon, this.backgroundColor, this.isFavorite = false}) : super(key: key);
+  const PokemonDetail(
+    {Key? key, required this.pokemon, this.backgroundColor, this.isFavorite = false, required List<Hability> pokemonSkills, required EvolutionChain pokemonEvolution}
+    ) : super(key: key);
 
   final TextStyle _textStyle = const TextStyle(
     fontFamily: 'Google Sans',

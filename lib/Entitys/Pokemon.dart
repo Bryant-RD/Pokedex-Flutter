@@ -10,11 +10,11 @@ class Pokemon {
   final int weight;
   final String species;
   final List<String> types;
-  SpecieData? specieData; //
-  BaseStats? baseStats; //
-
-  // final int evYield;
+  SpecieData? specieData;
+  BaseStats? baseStats;
   final int baseExp;
+  List<String> habilities;
+  List<String> moves;
 
   Pokemon({
     required this.id,
@@ -25,13 +25,13 @@ class Pokemon {
     required this.weight,
     required this.species,
     required this.types,
-    // required this.evYield,
     required this.baseExp,
     this.specieData,
     this.baseStats,
+    required this.habilities,
+    required this.moves
   });
 
-  //pokemon[base-experience]//Pokemon[stats][effort]
 
   Pokemon.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -41,8 +41,12 @@ class Pokemon {
         weight = json['weight'],
         species = json['species']['name'],
         baseStats = BaseStats.fromJson(json['stats']),
-        // evYield = json['stats']['effort'],
         baseExp = json['base_experience'],
+        habilities = (json['abilities'] as List)
+              .map((abilityEntry) => abilityEntry['ability']['name'].toString()).toList(),
+        moves = (json['moves'] as List)
+            .map((moveEntry) => moveEntry['move']['name'].toString())
+            .toList(),
         types = (json['types'] as List)
             .map((typeEntry) => typeEntry['type']['name'].toString())
             .toList();
