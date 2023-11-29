@@ -4,6 +4,7 @@ import 'package:pokedex_final_proyect/Entitys/Evoluciones.dart';
 import 'package:pokedex_final_proyect/Entitys/Hability.dart';
 import 'package:pokedex_final_proyect/Entitys/Pokemon.dart';
 import 'package:pokedex_final_proyect/pages/PokemonDetail.dart';
+import 'package:pokedex_final_proyect/services/FavoritePokemonService.dart';
 import 'package:pokedex_final_proyect/services/PokemonService.dart';
 
 class ListItemPokemon extends StatefulWidget {
@@ -198,15 +199,20 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
                 right: 7,
                 child: GestureDetector(
                   onTap: () {
+                    
+                    FavoritePokemonService favService = FavoritePokemonService();
+
+                    favService.addToFavorites(widget.pokemon!.name);
+
                     setState(() {
-                      isFavorite = !isFavorite;
+                      widget.pokemon!.isFavorite = !widget.pokemon!.isFavorite;
                     });
                     // pon la lógica de la base de datos aqui :)
                     // la variable "isFavorite" es para saber si algun pokemon es favorito
                   },
                   child: Icon(
-                    isFavorite ? Icons.star : Icons.star_border,
-                    color: isFavorite || color == Colors.yellow ? Colors.orange : Colors.orange,
+                    widget.pokemon!.isFavorite ? Icons.star : Icons.star_border,
+                    color: widget.pokemon!.isFavorite || color == Colors.yellow ? Colors.orange : Colors.orange,
                     size: 39.0,
                   ),
                 ),

@@ -15,6 +15,7 @@ class Pokemon {
   final int baseExp;
   List<String> habilities;
   List<String> moves;
+  bool isFavorite;
 
   Pokemon({
     required this.id,
@@ -29,7 +30,8 @@ class Pokemon {
     this.specieData,
     this.baseStats,
     required this.habilities,
-    required this.moves
+    required this.moves,
+    required this.isFavorite
   });
 
 
@@ -42,6 +44,7 @@ class Pokemon {
         species = json['species']['name'],
         baseStats = BaseStats.fromJson(json['stats']),
         baseExp = json['base_experience'],
+        isFavorite = false,
         habilities = (json['abilities'] as List)
               .map((abilityEntry) => abilityEntry['ability']['name'].toString()).toList(),
         moves = (json['moves'] as List)
@@ -55,11 +58,7 @@ class Pokemon {
     return {
       'id': id,
       'name': name,
-      'image': image,
-      'height': height,
-      'weight': weight,
-      'species': species,
-      'types': types
+      'isFavorite': isFavorite
     };
   }
 }

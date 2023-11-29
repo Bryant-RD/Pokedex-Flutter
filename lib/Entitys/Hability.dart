@@ -19,7 +19,6 @@ class Hability {
         return entry['effect'];
       }
     }
-    print('nada');
     return ''; // O devuelve un valor predeterminado o lanza una excepción según tus necesidades.
   }
 

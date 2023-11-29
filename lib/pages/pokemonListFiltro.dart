@@ -21,7 +21,7 @@ class _PokemonListFiltroState extends State<PokemonListFiltro> {
   void initState() {
     super.initState();
     pokemonFutures = widget.pokemonNames.map((pokemonName) {
-      return getPokemonByNameOrId(pokemonName);
+      return getPokemonByNameOrId(pokemonName, context);
     }).toList();
   }
 
@@ -58,7 +58,6 @@ class _PokemonListFiltroState extends State<PokemonListFiltro> {
                 return const Text('Error al cargar el Pokémon');
               } else if (snapshot.hasData && snapshot.data?.id != -1) {
                 final Pokemon result = snapshot.data as Pokemon;
-                print(result.name);
                 // return(Text(result.name));
                 return ListItemPokemon(pokemon: result);
               } else {

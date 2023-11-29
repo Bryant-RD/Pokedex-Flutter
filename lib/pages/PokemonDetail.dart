@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pokedex_final_proyect/Entitys/Evoluciones.dart';
 import 'package:pokedex_final_proyect/Entitys/Hability.dart';
 import 'package:pokedex_final_proyect/Entitys/Pokemon.dart';
-
 class PokemonDetail extends StatelessWidget {
   final Pokemon? pokemon;
   final Color? backgroundColor;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex_final_proyect/pages/PokemonListFiltro.dart';
+import 'package:pokedex_final_proyect/services/FavoritePokemonService.dart';
 import 'package:pokedex_final_proyect/services/PokemonProvider.dart';
 import 'package:pokedex_final_proyect/services/PokemonService.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +31,6 @@ class _ItemFiltroState extends State<ItemFiltro> {
 
   @override
   Widget build(BuildContext context) {
-    // final List<String> pokemonTypes = ['normal','fire','water','electric','grass','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dark','steel','fairy','dragon'];
 
     return Consumer<TypeSelected>(builder: (context, filterNotifier, child) {
       return InkWell(
@@ -55,11 +55,17 @@ class _ItemFiltroState extends State<ItemFiltro> {
               case "Inicio":
                 // Volvemos a la pantalla principal (la primera en la pila de navegación)
                 Navigator.popUntil(context, (route) => route.isFirst);
-                print("ATRAS");
                 break;
 
               case "Favoritos":
-                // ModalTypesSelect(context, pokemonTypes, filterNotifier);
+              FavoritePokemonService favService = FavoritePokemonService();
+
+                final pokemones = await favService.getFavoritePokemonList;
+                print(pokemones);
+                // ignore: use_build_context_synchronously
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => PokemonListFiltro(pokemonNames: pokemones))
+                );
                 break;
 
               default:

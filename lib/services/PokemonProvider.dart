@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TypeSelected with ChangeNotifier {
   
@@ -13,7 +14,6 @@ class TypeSelected with ChangeNotifier {
     } else if (_selectedTypes.length < 2) {
       _selectedTypes.add(type);
     }
-    print(_selectedTypes);
     notifyListeners();
   }
 
@@ -22,8 +22,6 @@ class TypeSelected with ChangeNotifier {
   void setGeneracion (String select) {
     _generacion = select;
     notifyListeners();
-  }
-
-  
+  }  
 
 }
