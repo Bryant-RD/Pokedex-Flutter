@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:pokedex_final_proyect/Entitys/Evoluciones.dart';
 import 'package:pokedex_final_proyect/Entitys/Hability.dart';
 import 'package:pokedex_final_proyect/Entitys/Pokemon.dart';
+import 'package:pokedex_final_proyect/widgets/PokemonDetailAbout.dart';
+import 'package:pokedex_final_proyect/widgets/PokemonDetailEvolutions.dart';
+import 'package:pokedex_final_proyect/widgets/PokemonDetailHability.dart';
 
 import '../services/FavoritePokemonService.dart';
 
@@ -177,8 +180,8 @@ class _PokemonDetailState extends State<PokemonDetail> {
                 Expanded(
                   child: TabBarView(
                     children: [
-                      PokemonDetailSobre(pokemon: widget.pokemon, color: widget.backgroundColor),
-                      PokemonDetailEvolucao(pokemonEvolution: widget.pokemonEvolution),
+                      PokemonDetailAbout(pokemon: widget.pokemon, color: widget.backgroundColor),
+                      PokemonDetailEvolutions(pokemonEvolution: widget.pokemonEvolution),
                       PokemonDetailHability(pokemonHabilities: widget.pokemonSkills, color: widget.backgroundColor),
                     ],
                   ),
@@ -193,9 +196,10 @@ class _PokemonDetailState extends State<PokemonDetail> {
 
   Widget _buildFavoriteButton() {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         FavoritePokemonService favService = FavoritePokemonService();
-        favService.addToFavorites(widget.pokemon!.name);
+        await favService.addToFavorites(widget.pokemon!.name);
+        // print(await favService.getFavoritePokemonList);
         setState(() {
           widget.pokemon!.isFavorite = !widget.pokemon!.isFavorite;
         });
@@ -216,206 +220,4 @@ class _PokemonDetailState extends State<PokemonDetail> {
 }
 
 
-
-class PokemonDetailSobre extends StatelessWidget {
-  final Pokemon? pokemon;
-  final Color? color;
-
-  const PokemonDetailSobre({Key? key, required this.pokemon, this.color}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final baseStats = pokemon?.baseStats;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 16),
-        _buildStatRow('Altura', '${(pokemon?.height ?? 0) / 10} m'),
-        const SizedBox(height: 16),
-        _buildStatRow('Peso', '${(pokemon?.weight ?? 0) / 10} kg'),
-        const SizedBox(height: 16),
-        if (baseStats != null) ...[
-          const SizedBox(height: 16),
-          const Divider(),
-          const SizedBox(height: 16),
-          _buildStatsSection('Estadísticas', [
-            _buildStatBar('HP', baseStats.hp, 255),
-            _buildStatBar('Ataque', baseStats.attack, 255),
-            _buildStatBar('Defensa', baseStats.defence, 255),
-            _buildStatBar('Ataque Especial', baseStats.specialAttack, 255),
-            _buildStatBar('Defensa Especial', baseStats.specialDefence, 255),
-            _buildStatBar('Velocidad', baseStats.speed, 255),
-          ]),
-        ],
-      ],
-    );
-  }
-
-  Widget _buildStatRow(String label, String value) {
-    return Row(
-      children: [
-        Expanded(
-          child: Text(
-            '$label:',
-            style: const TextStyle(
-              fontSize: 16.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
-          ),
-        ),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.bold,
-            color: color ?? Colors.blue,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildStatsSection(String sectionTitle, List<Widget> stats) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          sectionTitle,
-          style: const TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-          ),
-        ),
-        const SizedBox(height: 8),
-        ...stats,
-      ],
-    );
-  }
-
-  Widget _buildStatBar(String label, int value, int maxValue) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '$label:',
-          style: const TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-          ),
-        ),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(8.0),
-          child: LinearProgressIndicator(
-            value: value / maxValue,
-            backgroundColor: Colors.grey,
-            valueColor: AlwaysStoppedAnimation<Color>(color ?? Colors.blue),
-            minHeight: 10.0,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class PokemonDetailEvolucao extends StatelessWidget {
-  final EvolutionChain pokemonEvolution;
-
-  const PokemonDetailEvolucao({Key? key, required this.pokemonEvolution}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 16),
-          _buildEvolutionChain(pokemonEvolution.chain),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildEvolutionChain(EvolutionChainNode chainNode) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildNode(chainNode),
-        const SizedBox(height: 16),
-        if (chainNode.evolvesTo.isNotEmpty)
-          for (var evolvesToNode in chainNode.evolvesTo) _buildEvolutionChain(evolvesToNode),
-      ],
-    );
-  }
-
-  Widget _buildNode(EvolutionChainNode node) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Species: ${node.speciesName}',
-          style: TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Text('Is Baby: ${node.isBaby}'),
-        Text('Evolution Details: ${_formatEvolutionDetails(node.evolutionDetails)}'),
-      ],
-    );
-  }
-
-  String _formatEvolutionDetails(List<EvolutionDetails> details) {
-    return details.map((detail) => '${detail.minLevel} ${detail.triggerName} ${detail.triggerUrl}').join(', ');
-  }
-}
-
-class PokemonDetailHability extends StatelessWidget {
-  final List<Hability> pokemonHabilities;
-  final Color? color;
-
-  const PokemonDetailHability({Key? key, required this.pokemonHabilities, this.color}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: pokemonHabilities.length,
-      itemBuilder: (context, index) {
-        final hability = pokemonHabilities[index];
-        return Card(
-          margin: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  capitalize(hability.name),
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                    color: color ?? Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 8.0),
-                Text(
-                  hability.description,
-                  style: const TextStyle(fontSize: 16.0),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  String capitalize(String text) {
-    return text.isNotEmpty ? text[0].toUpperCase() + text.substring(1) : text;
-  }
-}
 

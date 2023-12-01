@@ -98,11 +98,10 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
-
-        List<Hability> habilidades = [
-          await getPokemonHabilityByName(widget.pokemon!.habilities[0]),
-          await getPokemonHabilityByName(widget.pokemon!.habilities[1])
-          ];
+        List<Hability> habilidades = [];
+        for (var i = 0; i < widget.pokemon!.habilities.length; i++) {
+          habilidades.add(await getPokemonHabilityByName(widget.pokemon!.habilities[i]));
+        }
 
         EvolutionChain ec = await getPokemonEvolutions(widget.pokemon!.specieData!.evolucionUrl);
 
@@ -137,7 +136,7 @@ class _ListItemPokemonState extends State<ListItemPokemon> {
                   opacity: 0.8,
                   child:  Image.asset(
                     color == Colors.white || color == Colors.yellow
-                        ? 'assets/pokeballBlack.png'
+                        ? 'assets/pokeballblack.png'
                         : 'assets/pokeball.png',
                     height: 135,
                     width: 135,
