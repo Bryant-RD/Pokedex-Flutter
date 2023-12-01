@@ -2,31 +2,42 @@ import 'package:flutter/material.dart';
 import 'package:pokedex_final_proyect/Entitys/Evoluciones.dart';
 import 'package:pokedex_final_proyect/Entitys/Hability.dart';
 import 'package:pokedex_final_proyect/Entitys/Pokemon.dart';
-class PokemonDetail extends StatelessWidget {
+
+import '../services/FavoritePokemonService.dart';
+
+class PokemonDetail extends StatefulWidget {
   final Pokemon? pokemon;
   final Color? backgroundColor;
   final bool isFavorite;
+  final List<Hability> pokemonSkills;
+  final EvolutionChain pokemonEvolution;
 
-  const PokemonDetail(
-    {Key? key, required this.pokemon, this.backgroundColor, this.isFavorite = false, required List<Hability> pokemonSkills, required EvolutionChain pokemonEvolution}
-    ) : super(key: key);
+  PokemonDetail({
+    Key? key,
+    required this.pokemon,
+    this.backgroundColor,
+    this.isFavorite = false,
+    required this.pokemonSkills,
+    required this.pokemonEvolution,
+  }) : super(key: key);
 
+  @override
+  _PokemonDetailState createState() => _PokemonDetailState();
+}
+
+class _PokemonDetailState extends State<PokemonDetail> {
   final TextStyle _textStyle = const TextStyle(
     fontFamily: 'Google Sans',
     fontSize: 22.0,
     fontWeight: FontWeight.bold,
   );
 
-  get color => null;
-
-  String capitalize(String text) {
-    return text.isNotEmpty ? text[0].toUpperCase() + text.substring(1) : text;
-  }
-
   @override
   Widget build(BuildContext context) {
-    final textColor = backgroundColor == Colors.white || backgroundColor == Colors.yellow ? Colors.black : Colors.white;
-    final tabLabelColor = backgroundColor ?? Colors.blue; // Color del AppBar
+    final textColor = widget.backgroundColor == Colors.white || widget.backgroundColor == Colors.yellow
+        ? Colors.black
+        : Colors.white;
+    final tabLabelColor = widget.backgroundColor ?? Colors.blue; // Color del AppBar
 
     return DefaultTabController(
       length: 3,
@@ -34,21 +45,24 @@ class PokemonDetail extends StatelessWidget {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(300.0),
           child: AppBar(
-            backgroundColor: backgroundColor,
+            backgroundColor: widget.backgroundColor,
             elevation: 0,
             flexibleSpace: Stack(
               alignment: Alignment.center,
               children: [
-                Image.asset(
-                  backgroundColor == Colors.white || backgroundColor == Colors.yellow
-                      ? 'assets/pokeballblack.png'
-                      : 'assets/pokeball.png',
-                  height: 300,
-                  width: 550,
-                  fit: BoxFit.cover,
+                Opacity(
+                  opacity: 0.7,
+                  child: Image.asset(
+                    widget.backgroundColor == Colors.white || widget.backgroundColor == Colors.yellow
+                        ? 'assets/pokeballblack.png'
+                        : 'assets/pokeball.png',
+                    height: 300,
+                    width: 550,
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 Image.network(
-                  pokemon?.image ?? '',
+                  widget.pokemon?.image ?? '',
                   height: 220,
                   fit: BoxFit.cover,
                 ),
@@ -61,7 +75,7 @@ class PokemonDetail extends StatelessWidget {
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          '#${pokemon?.id}',
+                          '#${widget.pokemon?.id}',
                           style: _textStyle.copyWith(
                             color: textColor,
                             fontSize: 28.0,
@@ -72,7 +86,7 @@ class PokemonDetail extends StatelessWidget {
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          capitalize(pokemon?.name ?? ''),
+                          capitalize(widget.pokemon?.name ?? ''),
                           style: _textStyle.copyWith(
                             color: textColor,
                             fontSize: 28.0,
@@ -93,7 +107,7 @@ class PokemonDetail extends StatelessWidget {
                                 spacing: 8.0,
                                 runSpacing: 8.0,
                                 children: [
-                                  for (var tipo in pokemon?.types ?? [])
+                                  for (var tipo in widget.pokemon?.types ?? [])
                                     Image.asset(
                                       'assets/icon_types/$tipo.png',
                                       width: 40.0,
@@ -108,17 +122,16 @@ class PokemonDetail extends StatelessWidget {
                     ],
                   ),
                 ),
-                // Mover la estrella a la esquina superior derecha
                 Positioned(
-                  top: 10,
-                  right: 10,
+                  top: 15,
+                  right: 15,
                   child: _buildFavoriteButton(),
                 ),
               ],
             ),
           ),
         ),
-        backgroundColor: backgroundColor,
+        backgroundColor: widget.backgroundColor,
         body: Center(
           child: Container(
             margin: const EdgeInsets.all(16.0),
@@ -153,7 +166,7 @@ class PokemonDetail extends StatelessWidget {
                     ),
                     Tab(
                       child: Text(
-                        "Status",
+                        "Habilidades",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -164,9 +177,9 @@ class PokemonDetail extends StatelessWidget {
                 Expanded(
                   child: TabBarView(
                     children: [
-                      PokemonDetailSobre(pokemon: pokemon, color: backgroundColor),
-                      const PokemonDetailEvolucao(),
-                      const PokemonDetailStatus(),
+                      PokemonDetailSobre(pokemon: widget.pokemon, color: widget.backgroundColor),
+                      PokemonDetailEvolucao(pokemonEvolution: widget.pokemonEvolution),
+                      PokemonDetailHability(pokemonHabilities: widget.pokemonSkills, color: widget.backgroundColor),
                     ],
                   ),
                 ),
@@ -179,19 +192,30 @@ class PokemonDetail extends StatelessWidget {
   }
 
   Widget _buildFavoriteButton() {
-    return IconButton(
-      icon: Icon(
-        isFavorite ? Icons.star : Icons.star_border,
-        color: isFavorite || color == Colors.yellow ? Colors.orange : Colors.orange,
+    return GestureDetector(
+      onTap: () {
+        FavoritePokemonService favService = FavoritePokemonService();
+        favService.addToFavorites(widget.pokemon!.name);
+        setState(() {
+          widget.pokemon!.isFavorite = !widget.pokemon!.isFavorite;
+        });
+      },
+      child: Icon(
+        widget.pokemon!.isFavorite ? Icons.star : Icons.star_border,
+        color: widget.pokemon!.isFavorite || widget.backgroundColor == Colors.yellow
+            ? Colors.orange
+            : Colors.orange,
         size: 49.0,
       ),
-      onPressed: () {
-        // Lógica para cambiar el estado de favorito
-        // Puedes implementar esto de acuerdo a tu lógica de manejo de favoritos
-      },
     );
   }
+
+  String capitalize(String text) {
+    return text.isNotEmpty ? text[0].toUpperCase() + text.substring(1) : text;
+  }
 }
+
+
 
 class PokemonDetailSobre extends StatelessWidget {
   final Pokemon? pokemon;
@@ -298,25 +322,100 @@ class PokemonDetailSobre extends StatelessWidget {
 }
 
 class PokemonDetailEvolucao extends StatelessWidget {
-  const PokemonDetailEvolucao({Key? key}) : super(key: key);
+  final EvolutionChain pokemonEvolution;
+
+  const PokemonDetailEvolucao({Key? key, required this.pokemonEvolution}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16.0),
-      child: const Text("Contenido de la pestaña de evolución"),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 16),
+          _buildEvolutionChain(pokemonEvolution.chain),
+        ],
+      ),
     );
+  }
+
+  Widget _buildEvolutionChain(EvolutionChainNode chainNode) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildNode(chainNode),
+        const SizedBox(height: 16),
+        if (chainNode.evolvesTo.isNotEmpty)
+          for (var evolvesToNode in chainNode.evolvesTo) _buildEvolutionChain(evolvesToNode),
+      ],
+    );
+  }
+
+  Widget _buildNode(EvolutionChainNode node) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Species: ${node.speciesName}',
+          style: TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text('Is Baby: ${node.isBaby}'),
+        Text('Evolution Details: ${_formatEvolutionDetails(node.evolutionDetails)}'),
+      ],
+    );
+  }
+
+  String _formatEvolutionDetails(List<EvolutionDetails> details) {
+    return details.map((detail) => '${detail.minLevel} ${detail.triggerName} ${detail.triggerUrl}').join(', ');
   }
 }
 
-class PokemonDetailStatus extends StatelessWidget {
-  const PokemonDetailStatus({Key? key}) : super(key: key);
+class PokemonDetailHability extends StatelessWidget {
+  final List<Hability> pokemonHabilities;
+  final Color? color;
+
+  const PokemonDetailHability({Key? key, required this.pokemonHabilities, this.color}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      child: const Text("Contenido de la pestaña de estado"),
+    return ListView.builder(
+      itemCount: pokemonHabilities.length,
+      itemBuilder: (context, index) {
+        final hability = pokemonHabilities[index];
+        return Card(
+          margin: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  capitalize(hability.name),
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                    color: color ?? Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 8.0),
+                Text(
+                  hability.description,
+                  style: const TextStyle(fontSize: 16.0),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
+
+  String capitalize(String text) {
+    return text.isNotEmpty ? text[0].toUpperCase() + text.substring(1) : text;
+  }
 }
+
