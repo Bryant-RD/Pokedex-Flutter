@@ -1,21 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex_final_proyect/Entitys/Evoluciones.dart';
+import 'package:pokedex_final_proyect/Entitys/Pokemon.dart';
+import 'package:pokedex_final_proyect/services/PokemonService.dart';
+import 'package:pokedex_final_proyect/widgets/ListItemPokemon.dart';
 
-class PokemonDetailEvolutions extends StatelessWidget {
+class PokemonDetailEvolutions extends StatefulWidget {
   final EvolutionChain pokemonEvolution;
 
   const PokemonDetailEvolutions({Key? key, required this.pokemonEvolution}) : super(key: key);
 
   @override
+  State<PokemonDetailEvolutions> createState() => _PokemonDetailEvolutionsState();
+}
+
+class _PokemonDetailEvolutionsState extends State<PokemonDetailEvolutions> {
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 16),
-          _buildEvolutionChain(pokemonEvolution.chain),
-        ],
+    return SingleChildScrollView(
+      child: Container(
+        // padding: const EdgeInsets.all(5.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 16),
+            _buildEvolutionChain(widget.pokemonEvolution.chain),
+          ],
+        ),
       ),
     );
   }
@@ -33,23 +43,40 @@ class PokemonDetailEvolutions extends StatelessWidget {
   }
 
   Widget _buildNode(EvolutionChainNode node) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Species: ${node.speciesName}',
-          style: const TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Text('Is Baby: ${node.isBaby}'),
-        Text('Evolution Details: ${_formatEvolutionDetails(node.evolutionDetails)}'),
-      ],
-    );
-  }
+    return FutureBuilder<Pokemon>(
+      future: getPokemonByNameOrId(node.speciesName),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Si aún está cargando, puedes mostrar un indicador de carga
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          // Si hay un error, puedes manejarlo aquí
+          return Text('Error: ${snapshot.error}');
+        } else if (snapshot.hasData) {
+          // Si la operación asíncrona fue exitosa, actualiza el estado
+          var evolucion = snapshot.data;
 
-  String _formatEvolutionDetails(List<EvolutionDetails> details) {
-    return details.map((detail) => '${detail.minLevel} ${detail.triggerName} ${detail.triggerUrl}').join(', ');
+          return ListItemPokemon(pokemon: evolucion);
+
+          // return Column(
+          //   crossAxisAlignment: CrossAxisAlignment.start,
+          //   children: [
+          //     Text(
+          //       'Species: ${node.speciesName}',
+          //       style: const TextStyle(
+          //         fontSize: 16.0,
+          //         fontWeight: FontWeight.bold,
+          //       ),
+          //     ),
+          //     Text('Is Baby: ${node.isBaby}'),
+          //     Image.network(evolucion!.image, width: 120.0),
+          //   ],
+          // );
+        } else {
+          // Si no hay datos disponibles, puedes manejarlo aquí
+          return Text('No se encontraron datos');
+        }
+      },
+    );
   }
 }

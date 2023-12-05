@@ -57,7 +57,7 @@ Future<Pokemon> getPokemonByUrl(String url) async {
   }
 }
 
-Future<Pokemon> getPokemonByNameOrId(String code, BuildContext context) async {
+Future<Pokemon> getPokemonByNameOrId(String code) async {
   Pokemon noEncontrado = Pokemon(
       id: -1,
       name: "null",

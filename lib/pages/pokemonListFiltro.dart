@@ -21,7 +21,7 @@ class _PokemonListFiltroState extends State<PokemonListFiltro> {
   void initState() {
     super.initState();
     pokemonFutures = widget.pokemonNames.map((pokemonName) {
-      return getPokemonByNameOrId(pokemonName, context);
+      return getPokemonByNameOrId(pokemonName);
     }).toList();
   }
 

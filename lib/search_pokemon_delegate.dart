@@ -36,7 +36,7 @@ class SearchPokemonDelegate extends SearchDelegate {
     if (esNumero(query)) {
       // Si el query es un número, asume que es un ID
       return FutureBuilder(
-        future: getPokemonByNameOrId(query, context),
+        future: getPokemonByNameOrId(query),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -76,7 +76,7 @@ class SearchPokemonDelegate extends SearchDelegate {
               itemBuilder: (context, index) {
                 final pokemonName = filteredNames[index];
                 return FutureBuilder(
-                  future: getPokemonByNameOrId(pokemonName, context),
+                  future: getPokemonByNameOrId(pokemonName),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const CircularProgressIndicator(strokeWidth: 2);
