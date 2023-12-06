@@ -30,6 +30,9 @@ flutter:
     - assets/alturaicon.png
     - assets/pesoicon.png
     - assets/pokeball2.png
+    - assets/loading/pokeball.gif
+    - assets/loading/loading-cat.gif
+    - assets/loading/loading-pokeball.gif
     - assets/icon_types/normal.png
     - assets/icon_types/fire.png
     - assets/icon_types/water.png

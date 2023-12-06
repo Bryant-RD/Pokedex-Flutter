@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:pokedex_final_proyect/Entitys/PokemonPage.dart';
 import 'package:pokedex_final_proyect/pages/PokemoList.dart';
@@ -14,22 +16,39 @@ void main() {
 }
 
 class MainApp extends StatefulWidget {
-  const MainApp({super.key});
+  const MainApp({Key? key}) : super(key: key);
 
   @override
   State<MainApp> createState() => _MainAppState();
 }
 
 class _MainAppState extends State<MainApp> {
-
   late Future<PokemonPage> pokemonPage;
+  late bool isLoading;
 
   @override
   void initState() {
     super.initState();
-    pokemonPage = getPokemonsPage(null);
+    isLoading = true;
+    loadPokemonData();
   }
 
+  void loadPokemonData() async {
+    // Simula la carga del fondo de pantalla
+    await Future.delayed(const Duration(seconds: 2));
+
+    // Muestra la pantalla de carga mientras se carga el fondo
+    setState(() {});
+
+    // Simula la carga de datos
+    await Future.delayed(const Duration(seconds: 3));
+
+    setState(() {
+      isLoading = false;
+      // Inicializa pokemonPage con getPokemonsPage(null)
+      pokemonPage = getPokemonsPage(null);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,45 +56,63 @@ class _MainAppState extends State<MainApp> {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => TypeSelected())
+        ChangeNotifierProvider(create: (_) => TypeSelected()),
       ],
       child: MaterialApp(
         theme: ThemeData(
           useMaterial3: true,
-          primaryColor: Colors.redAccent.shade700
+          primaryColor: Colors.redAccent.shade700,
         ),
         title: title,
-        home: Scaffold(
+        home: isLoading
+            ? LoadingScreen()
+            : Scaffold(
           drawer: MenuLateral(),
-            appBar: AppBar(
-              title: Image.asset(
-                'assets/pokedex.png',
-                width: 150,
-                height: 150,
-              ),
-              actions: <Widget>[
-                IconButton(
-                  icon: const Icon(Icons.search_rounded),
-                  tooltip: 'Search a pokemon',
-                  onPressed: () {
-                    showSearch(context: context, delegate: SearchPokemonDelegate());
-                  },
-                )
-              ],
+          appBar: AppBar(
+            title: Image.asset(
+              'assets/pokedex.png',
+              width: 150,
+              height: 150,
             ),
-          body: Center(
-            child: FutureBuilder(
-              future: pokemonPage,
-              builder: (context, snapshot) {
+            actions: <Widget>[
+              IconButton(
+                icon: const Icon(Icons.search_rounded),
+                tooltip: 'Search a pokemon',
+                onPressed: () {
+                  showSearch(context: context, delegate: SearchPokemonDelegate());
+                },
+              )
+            ],
+          ),
+          body: FutureBuilder(
+            future: pokemonPage,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return LoadingScreen(); // Muestra la pantalla de carga
+              } else if (snapshot.hasError) {
+                return Text('Error loading data: ${snapshot.error}');
+              } else {
                 return PokemonList(pokemonPage: snapshot.data);
-                /**
-                 * TODO:
-                 * hacer el consumer para activar el listener de los filtrados
-                 * hacer la funcion de filtrado
-                 */
               }
-            ),
-          )
+            },
+          ),
+
+        ),
+      ),
+    );
+  }
+}
+
+class LoadingScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.red, // Fondo rojo
+      body: Center(
+        child: Image.asset(
+          'assets/loading/loading-pokeball.gif',
+          width: 300,
+          height: 300,
         ),
       ),
     );
