@@ -18,7 +18,6 @@ class _PokemonDetailEvolutionsState extends State<PokemonDetailEvolutions> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        // padding: const EdgeInsets.all(5.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

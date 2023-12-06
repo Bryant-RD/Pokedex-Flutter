@@ -1,7 +1,5 @@
-import 'dart:convert';
-
 class EvolutionDetails {
-  int minLevel;
+  int? minLevel; // Cambiado a int? para admitir valores nulos
   String triggerName;
   String triggerUrl;
 
@@ -13,7 +11,7 @@ class EvolutionDetails {
 
   factory EvolutionDetails.fromJson(Map<String, dynamic> json) {
     return EvolutionDetails(
-      minLevel: json['min_level'],
+      minLevel: json['min_level'] as int?, // Asignar int? para permitir valores nulos
       triggerName: json['trigger']['name'],
       triggerUrl: json['trigger']['url'],
     );
@@ -40,12 +38,12 @@ class EvolutionChainNode {
       isBaby: json['is_baby'],
       speciesName: json['species']['name'],
       speciesUrl: json['species']['url'],
-      evolutionDetails: (json['evolution_details'] as List<dynamic>)
-          .map((detail) => EvolutionDetails.fromJson(detail))
-          .toList(),
-      evolvesTo: (json['evolves_to'] as List<dynamic>)
-          .map((node) => EvolutionChainNode.fromJson(node))
-          .toList(),
+      evolutionDetails: (json['evolution_details'] as List<dynamic>?)
+              ?.map((detail) => EvolutionDetails.fromJson(detail))
+              .toList() ?? [], // Si es nulo, asigna una lista vacía
+      evolvesTo: (json['evolves_to'] as List<dynamic>?)
+              ?.map((node) => EvolutionChainNode.fromJson(node))
+              .toList() ?? [], // Si es nulo, asigna una lista vacía
     );
   }
 }
