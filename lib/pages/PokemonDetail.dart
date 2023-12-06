@@ -40,7 +40,7 @@ class _PokemonDetailState extends State<PokemonDetail> {
     final textColor = widget.backgroundColor == Colors.white || widget.backgroundColor == Colors.yellow
         ? Colors.black
         : Colors.white;
-    final tabLabelColor = widget.backgroundColor ?? Colors.blue; // Color del AppBar
+    final tabLabelColor = widget.backgroundColor == Colors.white ? Colors.black : widget.backgroundColor; // Color del AppBar
 
     return DefaultTabController(
       length: 3,
@@ -174,7 +174,7 @@ class _PokemonDetailState extends State<PokemonDetail> {
                       ),
                     ),
                   ],
-                  indicatorColor: Colors.white,
+                  indicatorColor: tabLabelColor,
                   labelColor: tabLabelColor,
                 ),
                 Expanded(
@@ -182,7 +182,7 @@ class _PokemonDetailState extends State<PokemonDetail> {
                     children: [
                       PokemonDetailAbout(pokemon: widget.pokemon, color: widget.backgroundColor),
                       PokemonDetailEvolutions(pokemonEvolution: widget.pokemonEvolution),
-                      PokemonDetailHability(pokemonHabilities: widget.pokemonSkills, color: widget.backgroundColor),
+                      PokemonDetailHability(pokemonHabilities: widget.pokemonSkills, movimientos: widget.pokemon!.moves, color: widget.backgroundColor)
                     ],
                   ),
                 ),
