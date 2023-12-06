@@ -78,55 +78,65 @@ class _ItemFiltroState extends State<ItemFiltro> {
     });
   }
 
-  Future<dynamic> ModalGenerationSelect(BuildContext context, List<String> generaciones) {
-    return showModalBottomSheet(
-                context: context,
-                builder: (BuildContext context) {
-                  return Container(
-                    constraints: BoxConstraints(
-                      maxHeight: MediaQuery.of(context).size.height * 0.6,
-                    ),
-                    padding: const EdgeInsets.all(16.0),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Selecciona la generación',
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 16.0),
-                          // Utiliza ListView.builder para mostrar la lista de generaciones
-                          ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: generaciones.length,
-                            itemBuilder: (context, index) {
-                              return InkWell(
-                                onTap: () async {
-                                  final pokemones = await getPokemonsNameByGeneration(generaciones[index]);
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(builder: (context) => PokemonListFiltro(pokemonNames: pokemones))
-                                  );
-                                },
-                                child: Text(
-                                  generaciones[index],
-                                  style: const TextStyle(
-                                    fontSize: 16.0
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
+Future<dynamic> ModalGenerationSelect(BuildContext context, List<String> generaciones) {
+  return showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return Container(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.6,
+        ),
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Selecciona la generación',
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16.0),
+            Expanded( // Añadido Expanded para permitir que el ListView ocupe el espacio restante
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: generaciones.length,
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    onTap: () async {
+                      final pokemones = await getPokemonsNameByGeneration(generaciones[index]);
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => PokemonListFiltro(pokemonNames: pokemones))
+                      );
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.all(5.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                      decoration: BoxDecoration(
+                        color: Colors.redAccent.shade700,
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      child: Text(
+                        generaciones[index],
+                        style: const TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   );
                 },
-              );
-  }
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
 
   Future<dynamic> ModalTypesSelect(BuildContext context,
       List<String> pokemonTypes, TypeSelected filterNotifier) {
